@@ -1,3 +1,4 @@
+// src/app/api/analyze/route.ts
 import { NextRequest } from 'next/server';
 import OpenAI from 'openai';
 import { getSupabase } from '@/lib/supabase';
