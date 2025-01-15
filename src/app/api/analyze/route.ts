@@ -78,7 +78,7 @@ Respond with JSON in this format:
 }`;
 
   const completion = await openai.chat.completions.create({
-    model: "gpt-4-turbo-preview",
+    model: "gpt-4o-mini",
     messages: [
       {
         role: "system",
@@ -118,6 +118,7 @@ async function storeResults(
       user_strava_profile: user.user_metadata.custom_claims?.strava_profile,
       personality_type: analysis.type,
       explanation: analysis.explanation,
-      sample_titles: analysis.sampleTitles
+      sample_titles: analysis.sampleTitles,
+      created_at: new Date().toISOString()
     });
 }
