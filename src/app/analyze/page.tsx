@@ -1,3 +1,4 @@
+// src/app/analyze/page.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -28,10 +29,17 @@ export default function AnalyzePage() {
         setTimeout(() => setStatus('Analyzing your running style...'), 3000);
         setTimeout(() => setStatus('Almost there...'), 4500);
 
-        // Actually perform the analysis
-        const response = await fetch('/api/analyze');
+        // Make request with credentials
+        const response = await fetch('/api/analyze', {
+          credentials: 'include', // Important! Include cookies
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
         if (!response.ok) {
-          throw new Error('Analysis failed');
+          const error = await response.text();
+          throw new Error(error || 'Analysis failed');
         }
 
         clearInterval(progressInterval);
