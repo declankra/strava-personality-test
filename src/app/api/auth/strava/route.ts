@@ -1,3 +1,5 @@
+// src/app/api/auth/strava/route.ts
+
 import { NextRequest } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import type { StravaAuthResponse } from '@/types/strava';
