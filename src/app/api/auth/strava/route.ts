@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
 
   if (!code) {
     // Initial OAuth request - redirect to Strava
-    const stravaAuthUrl = `https://www.strava.com/oauth/authorize?client_id=${STRAVA_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=activity:read`;
+    const stravaAuthUrl = `https://www.strava.com/oauth/authorize?client_id=${STRAVA_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=activity:read_all,profile:read_all`;
     return Response.redirect(stravaAuthUrl);
   }
 
@@ -54,6 +54,8 @@ export async function GET(request: NextRequest) {
     return Response.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/analyze`);
   } catch (error) {
     console.error('Strava auth error:', error);
-    return Response.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/error?message=auth_failed`);
+    // Encode the error message for better security
+    const encodedError = encodeURIComponent(error instanceof Error ? error.message : 'auth_failed');
+    return Response.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/error?message=${encodedError}`);
   }
 }
