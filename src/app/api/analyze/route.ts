@@ -24,32 +24,47 @@ export async function GET(request: NextRequest) {
 
     // Fetch Strava activities
     const activities = await fetchStravaActivities(stravaToken);
-    
+
     // Get Strava user profile for logging
     const profile = await fetchStravaProfile(stravaToken);
-    
+
     // Extract titles and analyze
     const titles = activities.map(activity => activity.name);
     const analysis = await analyzeWithOpenAI(titles);
-    
+
     // Log the result in Supabase (no auth needed)
-    const supabase = getSupabase();
-    await supabase
-      .from('strava_personality_test')
-      .insert({
-        strava_id: profile.id,
-        user_name: `${profile.firstname} ${profile.lastname}`,
-        user_avatar: profile.profile,
-        user_strava_profile: `https://www.strava.com/athletes/${profile.id}`,
-        personality_type: analysis.type,
-        explanation: analysis.explanation,
-        sample_titles: analysis.sampleTitles,
-        created_at: new Date().toISOString()
-      });
-    
+    try {
+      const supabase = getSupabase();
+      const { data, error } = await supabase
+        .from('strava_personality_test')
+        .insert({
+          strava_id: profile.id,
+          user_name: `${profile.firstname} ${profile.lastname}`,
+          user_avatar: profile.profile,
+          user_strava_profile: `https://www.strava.com/athletes/${profile.id}`,
+          personality_type: analysis.type,
+          explanation: analysis.explanation,
+          sample_titles: analysis.sampleTitles,
+          created_at: new Date().toISOString()
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Supabase insert error:', error);
+        throw error;
+      }
+
+      console.log('Successfully stored results in Supabase:', { id: data.id });
+    } catch (error) {
+      console.error('Failed to store results in Supabase:', error);
+      return new Response('Failed to store results', { status: 500 });
+    }
+
+    // Return the analysis results
     return Response.json(analysis);
   } catch (error) {
-    console.error('Analysis error:', error);
+    console.error('Unexpected error in analyze route:', error);
     return new Response('Analysis failed', { status: 500 });
   }
 }
@@ -127,27 +142,6 @@ Respond with JSON in this format:
   }
 
   const result = JSON.parse(content);
-  
-  return result as PersonalityResult;
-}
 
-async function storeResults(
-  user: any,
-  analysis: PersonalityResult,
-  titles: string[]
-) {
-  const supabase = getSupabase();
-  
-  await supabase
-    .from('strava_personality_test')
-    .insert({
-      user_id: user.id,
-      user_name: user.user_metadata.full_name,
-      user_avatar: user.user_metadata.avatar_url,
-      user_strava_profile: user.user_metadata.custom_claims?.strava_profile,
-      personality_type: analysis.type,
-      explanation: analysis.explanation,
-      sample_titles: analysis.sampleTitles,
-      created_at: new Date().toISOString()
-    });
+  return result as PersonalityResult;
 }

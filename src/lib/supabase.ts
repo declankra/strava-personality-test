@@ -9,9 +9,19 @@ export const getSupabase = () => {
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error('Missing Supabase URL or anonymous key.');
+    throw new Error('Missing required Supabase environment variables');
   }
 
-  supabase = createClient(supabaseUrl, supabaseAnonKey);
+  try {
+    supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        persistSession: false // Since we're using Strava's OAuth
+      }
+    });
+  } catch (error) {
+    console.error('Failed to initialize Supabase client:', error);
+    throw error;
+  }
+
   return supabase;
 };
