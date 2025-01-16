@@ -46,9 +46,9 @@ const personalityTypes = [
 
 export default function Personalities() {
   return (
-    <section className="py-20 px-4 bg-gray-50 dark:bg-gray-900">
+    <section className="py-20 px-4">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-4xl font-bold text-center mb-24">
+        <h2 className="text-6xl font-bold text-center mb-24">
           Personality Types
         </h2>
         <FocusCards cards={personalityTypes} />
