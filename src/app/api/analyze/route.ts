@@ -1,6 +1,6 @@
 // src/app/api/analyze/route.ts
-
 import { NextRequest } from 'next/server';
+import { cookies } from 'next/headers';
 import OpenAI from 'openai';
 import { getSupabase } from '@/lib/supabase';
 import type { StravaActivity, PersonalityResult } from '@/types/strava';
@@ -9,36 +9,63 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
 
-// Strava API constants
 const STRAVA_API_BASE = 'https://www.strava.com/api/v3';
 const MAX_ACTIVITIES = 100;
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = getSupabase();
-    const { data: { session } } = await supabase.auth.getSession();
+    // Get Strava token from cookie
+    const cookieStore = cookies();
+    const stravaToken = cookieStore.get('strava_access_token')?.value;
 
-    if (!session) {
-      return new Response('Unauthorized', { status: 401 });
+    if (!stravaToken) {
+      return new Response('No Strava token found', { status: 401 });
     }
 
     // Fetch Strava activities
-    const activities = await fetchStravaActivities(session.access_token);
+    const activities = await fetchStravaActivities(stravaToken);
     
-    // Extract titles
+    // Get Strava user profile for logging
+    const profile = await fetchStravaProfile(stravaToken);
+    
+    // Extract titles and analyze
     const titles = activities.map(activity => activity.name);
-    
-    // Analyze with OpenAI
     const analysis = await analyzeWithOpenAI(titles);
     
-    // Store results in Supabase
-    await storeResults(session.user, analysis, titles);
+    // Log the result in Supabase (no auth needed)
+    const supabase = getSupabase();
+    await supabase
+      .from('strava_personality_test')
+      .insert({
+        strava_id: profile.id,
+        user_name: `${profile.firstname} ${profile.lastname}`,
+        user_avatar: profile.profile,
+        user_strava_profile: `https://www.strava.com/athletes/${profile.id}`,
+        personality_type: analysis.type,
+        explanation: analysis.explanation,
+        sample_titles: analysis.sampleTitles,
+        created_at: new Date().toISOString()
+      });
     
     return Response.json(analysis);
   } catch (error) {
     console.error('Analysis error:', error);
     return new Response('Analysis failed', { status: 500 });
   }
+}
+
+async function fetchStravaProfile(accessToken: string) {
+  const response = await fetch(`${STRAVA_API_BASE}/athlete`, {
+    headers: {
+      'Authorization': `Bearer ${accessToken}`
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch Strava profile');
+  }
+
+  return response.json();
 }
 
 async function fetchStravaActivities(accessToken: string): Promise<StravaActivity[]> {

@@ -2,6 +2,7 @@
 
 import { NextRequest } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
+import { cookies } from 'next/headers';
 import type { StravaAuthResponse } from '@/types/strava';
 
 export async function GET(request: NextRequest) {
@@ -19,7 +20,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // Exchange code for token
+    // Exchange code for Strava tokens
     const tokenResponse = await fetch('https://www.strava.com/oauth/token', {
       method: 'POST',
       headers: {
@@ -37,20 +38,15 @@ export async function GET(request: NextRequest) {
       throw new Error('Failed to exchange code for token');
     }
 
-    const authData: StravaAuthResponse = await tokenResponse.json();
+    const stravaAuth: StravaAuthResponse = await tokenResponse.json();
 
-    // Store auth data in Supabase session
-    const supabase = getSupabase();
-    
-    // Update session with Strava data
-    await supabase.auth.updateUser({
-      data: {
-        strava_access_token: authData.access_token,
-        strava_refresh_token: authData.refresh_token,
-        strava_token_expires_at: authData.expires_at,
-        strava_athlete_id: authData.athlete.id,
-        strava_profile: `https://www.strava.com/athletes/${authData.athlete.id}`,
-      }
+    // Store Strava tokens in secure HTTP-only cookies
+    const cookieStore = cookies();
+    cookieStore.set('strava_access_token', stravaAuth.access_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 // 1 hour - tokens expire in 6 hours anyway
     });
 
     // Redirect to analysis page

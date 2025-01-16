@@ -9,6 +9,7 @@ export default function AnalyzePage() {
   const router = useRouter();
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState('Connecting to Strava...');
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const analyzeActivities = async () => {
@@ -31,15 +32,20 @@ export default function AnalyzePage() {
 
         // Make request with credentials
         const response = await fetch('/api/analyze', {
-          credentials: 'include', // Important! Include cookies
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json'
           }
         });
 
         if (!response.ok) {
-          const error = await response.text();
-          throw new Error(error || 'Analysis failed');
+          const errorText = await response.text();
+          if (response.status === 401) {
+            // Handle unauthorized - redirect to auth
+            router.push('/api/auth/strava');
+            return;
+          }
+          throw new Error(errorText || 'Analysis failed');
         }
 
         clearInterval(progressInterval);
@@ -51,12 +57,39 @@ export default function AnalyzePage() {
         router.push(`/result?type=${encodeURIComponent(result.type)}`);
       } catch (error) {
         console.error('Analysis error:', error);
+        setError(error instanceof Error ? error.message : 'Analysis failed');
+        
+        // Handle specific error cases
+        if (error instanceof Error) {
+          if (error.message.includes('token')) {
+            router.push('/api/auth/strava'); // Re-authenticate
+            return;
+          }
+        }
+        
         router.push('/error?message=analysis_failed');
       }
     };
 
     analyzeActivities();
   }, [router]);
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-red-600 mb-4">Error</h1>
+          <p className="text-gray-700 mb-4">{error}</p>
+          <button
+            onClick={() => router.push('/api/auth/strava')}
+            className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
