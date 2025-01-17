@@ -12,8 +12,19 @@ const inter = Inter({
 
 
 export const metadata: Metadata = {
-  title: "Create dkBuilds Next App",
-  description: "dkbuilds next app starter-kit",
+  title: "Strava Personality Test",
+  description: "Discover your unique Strava personality based on your activity titles",
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/icon.png", type: "image/png" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png" },
+      { url: "/apple-touch-icon-precomposed.png" }
+    ],
+  },
+  manifest: "/site.webmanifest",
 };
 
 export default function RootLayout({

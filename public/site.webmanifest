@@ -1,0 +1,19 @@
+{
+    "name": "Strava Personality Test",
+    "short_name": "Strava Test",
+    "icons": [
+      {
+        "src": "/icon.png",
+        "sizes": "32x32",
+        "type": "image/png"
+      },
+      {
+        "src": "/apple-touch-icon.png",
+        "sizes": "180x180",
+        "type": "image/png"
+      }
+    ],
+    "theme_color": "#FC4C02",
+    "background_color": "#ffffff",
+    "display": "standalone"
+  }
