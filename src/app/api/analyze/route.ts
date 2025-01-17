@@ -1,4 +1,6 @@
 // src/app/api/analyze/route.ts
+export const dynamic = 'force-dynamic';
+
 import { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
 import OpenAI from 'openai';
