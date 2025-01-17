@@ -1,14 +1,12 @@
-// src/app/results/page.tsx
-
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { getSupabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
-import { Share2, Upload } from 'lucide-react';
+import { Share2 } from 'lucide-react';
 import { ConfettiButton } from '@/components/ui/confetti';
 import type { PersonalityResult } from '@/types/strava';
 
@@ -24,12 +22,47 @@ const personalityImages = {
 
 type PersonalityType = keyof typeof personalityImages;
 
-export default function ResultPage() {
+// Loading component
+function LoadingSpinner() {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500" />
+    </div>
+  );
+}
+
+// Main results content component
+function ResultContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const personalityType = searchParams.get('type') as PersonalityType;
   const [stats, setStats] = useState<{ total: number; typeCount: number } | null>(null);
   const [personality, setPersonality] = useState<PersonalityResult | null>(null);
+  const personalityType = searchParams.get('type') as PersonalityType;
+
+  // Share functionality
+  const handleShare = async () => {
+    const shareText = `I'm a ${personalityType} Strava poster! ${
+      personality?.explanation
+    } What Strava poster are you?? Take the test now to find out! ${window.location.origin}`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'My Strava Personality Test Result',
+          text: shareText,
+          url: window.location.origin,
+        });
+      } catch (error) {
+        console.error('Error sharing:', error);
+        // Fallback to clipboard
+        await navigator.clipboard.writeText(shareText);
+      }
+    } else {
+      // Clipboard fallback
+      await navigator.clipboard.writeText(shareText);
+      // TODO: Show toast notification
+    }
+  };
 
   // Load personality data and stats from Supabase
   useEffect(() => {
@@ -71,36 +104,8 @@ export default function ResultPage() {
     }
   }, [personalityType, router]);
 
-  const handleShare = async () => {
-    const shareText = `I'm a ${personalityType} Strava poster! ${
-      personality?.explanation
-    } What Strava poster are you?? Take the test now to find out! ${window.location.origin}`;
-
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'My Strava Personality Test Result',
-          text: shareText,
-          url: window.location.origin,
-        });
-      } catch (error) {
-        console.error('Error sharing:', error);
-        // Fallback to clipboard
-        await navigator.clipboard.writeText(shareText);
-      }
-    } else {
-      // Clipboard fallback
-      await navigator.clipboard.writeText(shareText);
-      // TODO: Show toast notification
-    }
-  };
-
   if (!personalityType || !personality || !stats) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500" />
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   return (
@@ -210,5 +215,14 @@ export default function ResultPage() {
         </motion.div>
       </div>
     </div>
+  );
+}
+
+// Main page component
+export default function ResultPage() {
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <ResultContent />
+    </Suspense>
   );
 }
