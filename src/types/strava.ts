@@ -18,7 +18,7 @@ export interface StravaActivity {
   }
   
   export interface PersonalityResult {
-    type: string;
+    personality_type: string;
     explanation: string;
-    sampleTitles: string[];
+    sample_titles: string[];
   }
