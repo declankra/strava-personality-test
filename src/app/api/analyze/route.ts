@@ -22,10 +22,31 @@ export async function GET(request: NextRequest) {
   try {
     // Get Strava token from cookie
     const cookieStore = cookies();
+    const sessionId = cookieStore.get('analysis_session')?.value;
     const stravaToken = cookieStore.get('strava_access_token')?.value;
 
     if (!stravaToken) {
       return new Response('No Strava token found', { status: 401 });
+    }
+    if (!sessionId) {
+      return new Response('No session ID found', { status: 401 });
+    }
+
+    const supabase = getSupabase();
+
+    // Check if analysis exists for this session
+    const { data: existingAnalysis } = await supabase
+      .from('strava_personality_test')
+      .select('*')
+      .eq('session_id', sessionId)
+      .single();
+  
+    if (existingAnalysis) {
+      return Response.json({
+        type: existingAnalysis.personality_type,
+        explanation: existingAnalysis.explanation,
+        sampleTitles: existingAnalysis.sample_titles
+      });
     }
 
     // Fetch Strava activities
@@ -51,6 +72,7 @@ export async function GET(request: NextRequest) {
       const { data, error } = await supabase
         .from('strava_personality_test')
         .insert({
+          session_id: sessionId,
           strava_id: profile.id,
           user_name: `${profile.firstname} ${profile.lastname}`,
           user_avatar: profile.profile,

@@ -49,6 +49,15 @@ export async function GET(request: NextRequest) {
       maxAge: 60 * 60 // 1 hour - tokens expire in 6 hours anyway
     });
 
+    const sessionId = crypto.randomUUID(); // Generate unique session ID
+    // Store in secure cookie
+    cookieStore.set('analysis_session', sessionId, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 15 // 15 minutes
+    });
+
     // Redirect to analysis page
     return Response.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/analyze`);
   } catch (error) {

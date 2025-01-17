@@ -10,9 +10,14 @@ export default function AnalyzePage() {
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState('Connecting to Strava...');
   const [error, setError] = useState<string | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   useEffect(() => {
     const analyzeActivities = async () => {
+      // Prevent multiple simultaneous analysis attempts
+      if (isAnalyzing) return;
+      setIsAnalyzing(true);
+
       try {
         // Simulate progress while actually analyzing
         const progressInterval = setInterval(() => {
@@ -68,6 +73,9 @@ export default function AnalyzePage() {
         }
         
         router.push('/error?message=analysis_failed');
+      } finally {
+        // Reset analyzing state in case user navigates back
+        setIsAnalyzing(false);
       }
     };
 

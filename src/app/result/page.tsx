@@ -39,6 +39,11 @@ function ResultContent() {
   const [stats, setStats] = useState<{ total: number; typeCount: number } | null>(null);
   const [personality, setPersonality] = useState<PersonalityResult | null>(null);
   const personalityType = searchParams.get('type') as PersonalityType;
+  
+  // Clear analysis session cookie once results are displayed
+  useEffect(() => {
+    document.cookie = 'analysis_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+  }, []);
 
   // Share functionality
   const handleShare = async () => {
