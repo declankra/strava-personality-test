@@ -3,7 +3,11 @@ import { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
 import OpenAI from 'openai';
 import { getSupabase } from '@/lib/supabase';
-import type { StravaActivity, PersonalityResult } from '@/types/strava';
+import type { 
+  StravaActivity, 
+  OpenAIPersonalityResult,
+  PersonalityResult 
+} from '@/types/strava';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
@@ -30,9 +34,16 @@ export async function GET(request: NextRequest) {
 
     // Extract titles and analyze
     const titles = activities.map(activity => activity.name);
-    const analysis = await analyzeWithOpenAI(titles);
+    const openAIResult = await analyzeWithOpenAI(titles);
 
-    // Log the result in Supabase (no auth needed)
+    // Transform OpenAI result to database format
+    const analysis: PersonalityResult = {
+      personality_type: openAIResult.type,
+      explanation: openAIResult.explanation,
+      sample_titles: openAIResult.sampleTitles
+    };
+
+    // Log the result in Supabase
     try {
       const supabase = getSupabase();
       const { data, error } = await supabase
@@ -42,9 +53,9 @@ export async function GET(request: NextRequest) {
           user_name: `${profile.firstname} ${profile.lastname}`,
           user_avatar: profile.profile,
           user_strava_profile: `https://www.strava.com/athletes/${profile.id}`,
-          personality_type: analysis.type,
+          personality_type: analysis.personality_type,
           explanation: analysis.explanation,
-          sample_titles: analysis.sampleTitles,
+          sample_titles: analysis.sample_titles,
           created_at: new Date().toISOString()
         })
         .select()
@@ -61,8 +72,12 @@ export async function GET(request: NextRequest) {
       return new Response('Failed to store results', { status: 500 });
     }
 
-    // Return the analysis results
-    return Response.json(analysis);
+    // Return the analysis results in the format expected by the frontend
+    return Response.json({
+      type: analysis.personality_type,
+      explanation: analysis.explanation,
+      sampleTitles: analysis.sample_titles
+    });
   } catch (error) {
     console.error('Unexpected error in analyze route:', error);
     return new Response('Analysis failed', { status: 500 });
@@ -100,8 +115,7 @@ async function fetchStravaActivities(accessToken: string): Promise<StravaActivit
   return response.json();
 }
 
-async function analyzeWithOpenAI(titles: string[]): Promise<PersonalityResult> {
-  // Prepare the prompt for analysis
+async function analyzeWithOpenAI(titles: string[]): Promise<OpenAIPersonalityResult> {
   const prompt = `Analyze these Strava activity titles and determine which personality type best matches the user's style. The titles are:
 
 ${titles.join('\n')}
@@ -141,7 +155,5 @@ Respond with JSON in this format:
     throw new Error('No content received from OpenAI');
   }
 
-  const result = JSON.parse(content);
-
-  return result as PersonalityResult;
+  return JSON.parse(content) as OpenAIPersonalityResult;
 }
