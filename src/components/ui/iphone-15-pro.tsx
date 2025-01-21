@@ -8,17 +8,22 @@ export interface Iphone15ProProps extends SVGProps<SVGSVGElement> {
 }
 
 export default function Iphone15Pro({
-  width = 433,
-  height = 882,
+  width = 260, // Reduced default width
+  height = 530, // Reduced default height
   src,
   videoSrc,
   ...props
 }: Iphone15ProProps) {
+  // Calculate scaled dimensions while maintaining aspect ratio
+  const aspectRatio = 433 / 882;
+  const scaledWidth = width;
+  const scaledHeight = width / aspectRatio;
+
   return (
     <svg
-      width={width}
-      height={height}
-      viewBox={`0 0 ${width} ${height}`}
+      width={scaledWidth}
+      height={scaledHeight}
+      viewBox="0 0 433 882"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       {...props}
@@ -80,18 +85,6 @@ export default function Iphone15Pro({
           />
         </foreignObject>
       )}
-      <path
-        d="M154 48.5C154 38.2827 162.283 30 172.5 30H259.5C269.717 30 278 38.2827 278 48.5C278 58.7173 269.717 67 259.5 67H172.5C162.283 67 154 58.7173 154 48.5Z"
-        className="fill-[#F5F5F5] dark:fill-[#262626]"
-      />
-      <path
-        d="M249 48.5C249 42.701 253.701 38 259.5 38C265.299 38 270 42.701 270 48.5C270 54.299 265.299 59 259.5 59C253.701 59 249 54.299 249 48.5Z"
-        className="fill-[#F5F5F5] dark:fill-[#262626]"
-      />
-      <path
-        d="M254 48.5C254 45.4624 256.462 43 259.5 43C262.538 43 265 45.4624 265 48.5C265 51.5376 262.538 54 259.5 54C256.462 54 254 51.5376 254 48.5Z"
-        className="fill-[#E5E5E5] dark:fill-[#404040]"
-      />
       <defs>
         <clipPath id="roundedCorners">
           <rect
