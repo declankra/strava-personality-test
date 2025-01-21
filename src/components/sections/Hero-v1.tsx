@@ -21,6 +21,31 @@ interface Avatar {
   profileUrl: string;
 }
 
+// Flow step images with their properties
+const flowSteps = [
+  {
+    src: "/images/flow/step1-connect.png",
+    alt: "Connect with Strava",
+    rotation: "-12deg",
+    zIndex: "z-[1]",
+    marginRight: "-mr-4",
+  },
+  {
+    src: "/images/flow/step2-analyze.png",
+    alt: "Analysis in progress",
+    rotation: "0deg",
+    zIndex: "z-[3]",
+    marginRight: "-mr-4",
+  },
+  {
+    src: "/images/flow/step3-result.png",
+    alt: "Your personality result",
+    rotation: "12deg",
+    zIndex: "z-[2]",
+    marginRight: "mr-0",
+  },
+];
+
 export default function Hero() {
   const [userCount, setUserCount] = useState(0);
   const [recentAvatars, setRecentAvatars] = useState<Avatar[]>([]);
@@ -71,19 +96,28 @@ export default function Hero() {
       <RetroGrid className="absolute inset-0" opacity={0.3} />
       
       <div className="relative z-10 text-center px-4 max-w-6xl mx-auto">
-        {/* Preview Section */}
-        <motion.div
+        {/* Flow Steps */}
+        <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex justify-center items-center gap-8 mb-12"
+          className="flex justify-center items-center mb-8 md:mb-12"
         >
-          <div className="relative w-64 h-48 -rotate-6 shadow-xl rounded-lg overflow-hidden">
-            <Image
-              src="/images/iPhone/preview_cropped.webp"
-              alt="Strava post preview"
-              fill
-              className="object-cover"
-            />
+          <div className="flex justify-center -space-x-4 md:-space-x-8 px-4 md:px-0">
+            {flowSteps.map((step, index) => (
+              <div
+                key={step.alt}
+                className={`relative w-24 h-24 md:w-48 md:h-48 ${step.zIndex} ${step.marginRight}`}
+                style={{ transform: `rotate(${step.rotation})` }}
+              >
+                <Image
+                  src={step.src}
+                  alt={step.alt}
+                  fill
+                  className="object-contain"
+                  priority={index === 1} // Prioritize loading the center image
+                />
+              </div>
+            ))}
           </div>
         </motion.div>
         
