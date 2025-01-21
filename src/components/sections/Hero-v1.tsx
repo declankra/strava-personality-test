@@ -9,18 +9,18 @@ import { ChevronUp } from "lucide-react";
 import { getSupabase } from "@/lib/supabase";
 
 const bubbleLetterStyle = {
-    textShadow: "2px 2px 0px #8B5CF6",
-    WebkitTextStroke: "2px #8B5CF6",
-    backgroundImage: "linear-gradient(45deg, #8B5CF6, #F59E0B)",
-    WebkitBackgroundClip: "text",
-    WebkitTextFillColor: "transparent",
-  }
+  textShadow: "2px 2px 0px #8B5CF6",
+  WebkitTextStroke: "2px #8B5CF6",
+  backgroundImage: "linear-gradient(45deg, #8B5CF6, #F59E0B)",
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent",
+};
 
 interface Avatar {
-    imageUrl: string;
-    profileUrl: string;
-  }
-  
+  imageUrl: string;
+  profileUrl: string;
+}
+
 export default function Hero() {
   const [userCount, setUserCount] = useState(0);
   const [recentAvatars, setRecentAvatars] = useState<Avatar[]>([]);
@@ -87,31 +87,42 @@ export default function Hero() {
           </div>
         </motion.div>
         
-        {/* Main Headline */}
+        {/* Main Headline with Zoom Animation */}
         <div className="mb-16">
-        <h1 
-            className="text-6xl md:text-8xl font-bold mb-4 tracking-tight"
-            style={bubbleLetterStyle}
+          <motion.div 
+            initial={{ scale: 0.1, opacity: 0 }} 
+            animate={{ scale: 1, opacity: 1 }} 
+            transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <motion.span
-              initial={{ scale: 0.9 }}
-              animate={{ scale: 1 }}
-              transition={{
-                duration: 0.5,
-                repeat: Infinity,
-                repeatType: "reverse",
-              }}
-              className="inline-block"
+            <h1 
+              className="text-6xl md:text-8xl font-bold mb-4 tracking-tight"
+              style={bubbleLetterStyle}
             >
-              Athlete Personality Test
-            </motion.span>
-          </h1>
-          <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300">
+              <motion.span
+                initial={{ scale: 0.9 }}
+                animate={{ scale: 1 }}
+                transition={{
+                  duration: 0.5,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                }}
+                className="inline-block"
+              >
+                Athlete Personality Test
+              </motion.span>
+            </h1>
+          </motion.div>
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="text-xl md:text-2xl text-gray-600 dark:text-gray-300"
+          >
             Discover Your Unique Athlete Personality — {" "}
-            <span className="text-orange-500 font-medium ">
+            <span className="text-orange-500 font-medium">
               Based on your Strava Activity Titles
             </span>
-          </p>
+          </motion.p>
         </div>
 
         {/* CTA Section */}
@@ -122,7 +133,6 @@ export default function Hero() {
           className="flex flex-col items-center justify-center gap-6 w-full"
         >
           <div className="relative">
-            {/* Connect with Strava button */}
             <button 
               onClick={handleGetStarted}
               className="relative transition-transform hover:scale-105 focus:outline-none"
@@ -136,7 +146,6 @@ export default function Hero() {
               />
             </button>
             
-            {/* Bouncing arrow */}
             <motion.div
               animate={{ 
                 y: [0, -8, 0],
