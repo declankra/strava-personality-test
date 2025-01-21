@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+// src/app/layout.tsx
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import Header from '@/components/layout/Header';
@@ -10,10 +11,15 @@ const inter = Inter({
   variable: "--font-sans",
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+};
 
 export const metadata: Metadata = {
-  title: "Strava Personality Test",
-  description: "Discover your unique Strava personality based on your activity titles",
+  title: "Athlete Personality Test - Powered by Strava",
+  description: "Discover your unique Athlete personality based on your Strava activity titles",
   icons: {
     icon: [
       { url: "/favicon.ico" },
@@ -35,12 +41,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} antialiased`}
+        className={`${inter.variable} antialiased min-h-screen w-full overflow-x-hidden`}
         suppressHydrationWarning
       >
         <OpenPanelProvider />
         <Header />
-        <main>{children}</main>
+        <main className="w-full overflow-x-hidden">{children}</main>
         <Footer />
       </body>
     </html>
