@@ -109,7 +109,7 @@ export default function Hero() {
           <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300">
             Discover Your Unique Athlete Personality — {" "}
             <span className="text-orange-500 font-medium ">
-              Powered by Strava
+              Based on your Strava Activity Titles
             </span>
           </p>
         </div>
@@ -159,7 +159,7 @@ export default function Hero() {
               numPeople={userCount > 5 ? userCount - 5 : 0}
             />
             <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-              Join {userCount.toLocaleString()} runners who've discovered their style
+              Join {userCount.toLocaleString()} athletes who've discovered their style
             </p>
           </div>
         </motion.div>
