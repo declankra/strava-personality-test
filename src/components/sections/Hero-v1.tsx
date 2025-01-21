@@ -11,9 +11,10 @@ import { getSupabase } from "@/lib/supabase";
 const bubbleLetterStyle = {
   textShadow: "0px 2px 0px #8B5CF6",
   WebkitTextStroke: "1.25px #8B5CF6",
-  backgroundColor: "#F59E0B",
+  backgroundImage: "linear-gradient(to bottom, #F59E0B, #F59E0B)", // Using gradient instead of backgroundColor
   WebkitBackgroundClip: "text",
   WebkitTextFillColor: "transparent",
+  display: "inline-block", // Ensure the background only applies to the text
 };
 
 interface Avatar {
