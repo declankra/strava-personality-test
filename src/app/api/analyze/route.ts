@@ -145,18 +145,18 @@ async function analyzeWithOpenAI(titles: string[]): Promise<OpenAIPersonalityRes
 ${titles.join('\n')}
 
 Possible personality types are:
-1. "The Poet" - Writes deeply philosophical titles reflecting on life's journey
-2. "The Data Nerd" - Includes precise stats, conditions, and metrics
-3. "The Storyteller" - Creates a narrative with each run
-4. "The Minimalist" - Uses single words or keeps it purely functional
-5. "The Motivator" - Includes inspirational quotes or messaging
-6. "The Humorist" - Crafts witty, punny titles
+1. "Motivator" - Hypes others with motivational quotes and good vibes
+2. "Data Enthusiast" - Every title includes precise stats, conditions, and metrics
+3. "Glory Chaser" - Chases PRs, podiums, and leaderboard domination with grit
+4. "Storyteller" - Turns every workout into a reflective and poetic story
+5. "Essentialist" - Doesn't change the default titles, no frills, no fuss
+6. "Comedian" - Crafts witty puns and jokes to entertain and lighten the mood
 
 Respond with JSON in this format:
 {
   "type": "personality type name",
   "explanation": "2-3 sentences explaining why this type matches, referencing specific titles",
-  "sampleTitles": ["array of 3 example titles that best demonstrate this style"]
+  "sampleTitles": ["array of 3 referenced titles that best demonstrate this style"]
 }`;
 
   const completion = await openai.chat.completions.create({
@@ -164,7 +164,7 @@ Respond with JSON in this format:
     messages: [
       {
         role: "system",
-        content: "You are analyzing Strava activity titles to determine a user's personality type. Be specific in your analysis and reference actual titles in your explanation."
+        content: "You are analyzing Strava activity titles to determine a user's personality type. Your tone is known-it-all, witty, confident and almost-mystic, leaving the users with a sense of being understood. Be specific in your analysis and reference actual titles in your explanation."
       },
       {
         role: "user",

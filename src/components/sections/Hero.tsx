@@ -9,7 +9,7 @@ import PulsatingButton from "@/components/ui/pulsating-button";
 import AvatarCircles from "@/components/ui/avatar-circles";
 import { getSupabase } from "@/lib/supabase";
 import { 
-  Brain, 
+  Trophy, 
   LineChart, 
   BookOpen, 
   Minimize2, 
@@ -19,12 +19,12 @@ import {
 
 // Personality types with their corresponding icons
 const personalityTypes = [
-  { icon: Brain, label: "The Poet" },
-  { icon: LineChart, label: "The Data Nerd" },
-  { icon: BookOpen, label: "The Storyteller" },
-  { icon: Minimize2, label: "The Minimalist" },
-  { icon: Rocket, label: "The Motivator" },
-  { icon: SmilePlus, label: "The Humorist" }
+  { icon: Rocket, label: "Motivator" },
+  { icon: LineChart, label: "Data Enthusiast" },
+  { icon: Trophy, label: "Glory Chaser" },
+  { icon: BookOpen, label: "Storyteller" },
+  { icon: Minimize2, label: "Essentialist" },
+  { icon: SmilePlus, label: "Comedian" }
 ];
 
 export default function Hero() {

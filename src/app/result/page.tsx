@@ -13,12 +13,12 @@ import type { PersonalityResult } from '@/types/strava';
 
 // Mapping of personality types to their image paths
 const personalityImages = {
-  'The Poet': '/images/personalities/poet.webp',
-  'The Data Nerd': '/images/personalities/data-nerd.webp',
-  'The Storyteller': '/images/personalities/storyteller.webp',
-  'The Minimalist': '/images/personalities/minimalist.webp',
-  'The Motivator': '/images/personalities/motivator.webp',
-  'The Humorist': '/images/personalities/humorist.webp',
+  'Motivator': '/images/personalities/motivator.webp',
+  'Data Enthusiast': '/images/personalities/data-enthusiast.webp',
+  'Glory Chaser': '/images/personalities/glory-chaser.webp',
+  'Storyteller': '/images/personalities/storyteller.webp',
+  'Essentialist': '/images/personalities/essentialist.webp',
+  'Comedian': '/images/personalities/comedian.webp',
 } as const;
 
 type PersonalityType = keyof typeof personalityImages;

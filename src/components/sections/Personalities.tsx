@@ -7,40 +7,40 @@ import { FocusCards } from "@/components/ui/focus-cards";
 // Define personality types and their descriptions
 const personalityTypes = [
   {
-    title: "The Motivator",
+    title: "Motivator",
     src: "/images/personalities/motivator.webp",
-    description: "Always includes inspirational quotes or messaging.",
-    example: "Nothing worth having comes easy 💪 #grateful"
+    description: "Hypes others with motivational quotes and good vibes.",
+    example: "Nothing worth having comes easy 💪 #noexcuses #blessed"
   },
   {
-    title: "The Data Nerd",
-    src: "/images/personalities/data-nerd.webp",
+    title: "Data Enthusiast",
+    src: "/images/personalities/data-enthusiast.webp",
     description: "Every title includes precise stats, conditions, and metrics.",
-    example: "6.2mi @ 7:45/mi, 72°F, 65% humidity, Z2 training"
+    example: "10K @ 6:45/mi | 68°F | Z3 HR Avg 155 bpm"
   },
   {
-    title: "The Storyteller",
+    title: "Glory Chaser",
+    src: "/images/personalities/glory-chaser.webp",
+    description: "Chases PRs, podiums, and leaderboard domination with grit.",
+    example: "Half marathon PR—1:27:30! 🎉🔥"
+  },
+  {
+    title: "Storyteller",
     src: "/images/personalities/storyteller.webp",
-    description: "Creates a narrative with each run.",
-    example: "That time I chased a squirrel and found a secret trail"
+    description: "Turns every workout into a reflective and poetic story.",
+    example: "Through misty trails, I found clarity in every step."
   },
   {
-    title: "The Minimalist",
-    src: "/images/personalities/minimalist.webp",
-    description: "Uses single words or keeps it purely functional.",
+    title: "Essentialist",
+    src: "/images/personalities/essentialist.webp",
+    description: "Doesn't change the default titles. No frills, no fuss.",
     example: "Morning Run"
   },
   {
-    title: "The Humorist",
-    src: "/images/personalities/humorist.webp",
-    description: "Consistently crafts witty, punny titles.",
-    example: "Running late (literally)"
-  },
-  {
-    title: "The Poet",
-    src: "/images/personalities/poet.webp",
-    description: "Writes deeply philosophical titles reflecting on life's journey through running.",
-    example: "Dancing with dawn's first light, finding myself mile by mile"
+    title: "Comedian",
+    src: "/images/personalities/comedian.webp",
+    description: "Crafts witty puns and jokes to entertain and lighten the mood.",
+    example: "I'm wheely tired, but I'll pedal through."
   }
 ];
 
