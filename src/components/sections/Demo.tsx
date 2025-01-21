@@ -36,18 +36,19 @@ export default function Demo() {
           </p>
         </div>
 
-              {/* Flow Demonstration */}
-              <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
+        {/* Flow Demonstration */}
+        <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
           {/* Strava App Preview in iPhone */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="w-full lg:w-[28%]"
+            className="w-full max-w-[300px] md:max-w-none lg:w-[28%]"
           >
             <Iphone15Pro 
-              src="/images/iphone/preview.webp" 
+              src="/images/iphone/preview.webp"
+              width={300}
             />
           </motion.div>
 
