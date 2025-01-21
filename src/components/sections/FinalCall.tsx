@@ -1,6 +1,18 @@
+// src/components/sections/FinalCall.tsx
+
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { ChevronUp } from "lucide-react";
+
+// Define the bubble text styles with regular and inverted variants
+const bubbleTextStyle = {
+  textShadow: "0px 2px 0px #8B5CF6",
+  WebkitTextStroke: "1.25px #8B5CF6",
+  backgroundImage: "linear-gradient(to bottom, #F59E0B, #F59E0B)",
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent",
+  display: "inline-block",
+} as const;
 
 export default function FinalCall() {
   const handleGetStarted = () => {
@@ -11,8 +23,8 @@ export default function FinalCall() {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'Athlete Personality Test',
-          text: 'Discover your unique athlete personality! Take the test now.',
+          title: 'Athlete Personality Test - Powered by Strava',
+          text: 'Discover your unique athlete personality based on your Strava activity titles! Take the test now.',
           url: window.location.href,
         });
       } catch (error) {
@@ -35,15 +47,18 @@ export default function FinalCall() {
 
           {/* Content */}
           <div className="relative z-10">
-            {/* Headline */}
+            {/* Headline with mixed bubble text styles */}
             <h2 className="text-4xl md:text-5xl font-bold text-center mb-12">
               Ready to Find Your{" "}
-              <span className="text-orange-500">Athlete Personality</span>?
+              <span style={bubbleTextStyle}>
+                Athlete Personality
+              </span>
+              ?
             </h2>
 
-            {/* Buttons container */}
-            <div className="flex flex-col md:flex-row justify-center items-center gap-6">
-              {/* Connect with Strava button */}
+            {/* Buttons container with improved spacing for mobile */}
+            <div className="flex flex-col items-center gap-16 md:gap-6 md:flex-row md:justify-center">
+              {/* Connect with Strava button container */}
               <div className="relative">
                 <button 
                   onClick={handleGetStarted}
@@ -52,13 +67,13 @@ export default function FinalCall() {
                   <Image
                     src="/btn_strava_connectwith_orange.svg"
                     alt="Connect with Strava"
-                    width={320}
-                    height={64}
+                    width={193}
+                    height={48}
                     className="h-16 w-auto"
                   />
                 </button>
                 
-                {/* Bouncing text and arrow */}
+                {/* Bouncing arrow and text - now positioned absolutely with improved spacing */}
                 <motion.div
                   animate={{ 
                     y: [0, -8, 0],
@@ -68,17 +83,17 @@ export default function FinalCall() {
                     repeat: Infinity,
                     ease: "easeInOut",
                   }}
-                  className="absolute -bottom-12 left-[28%] -translate-x-1/2 flex flex-col items-center text-orange-500"
+                  className="absolute -bottom-10 left-[29%] flex flex-col items-center text-orange-500 pointer-events-none"
                 >
                   <ChevronUp className="w-6 h-6" />
-                  <span className="text-sm font-medium mb-1">Take the test now</span>
+                  <span className="text-sm font-medium whitespace-nowrap">Take the test now</span>
                 </motion.div>
               </div>
 
-              {/* Share button */}
+              {/* Share button - matches Strava button height */}
               <button
                 onClick={handleShare}
-                className="px-8 py-4 rounded-lg border-2 border-orange-500 text-orange-500 font-medium 
+                className="h-16 px-8 rounded-lg border-2 border-orange-500 text-orange-500 font-medium 
                   hover:bg-orange-50 dark:hover:bg-orange-950 transition-colors whitespace-nowrap
                   hover:shadow-lg hover:shadow-orange-500/20"
               >
