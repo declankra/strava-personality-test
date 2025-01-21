@@ -1,6 +1,6 @@
 "use client";
 
-import Hero from "@/components/sections/Hero";
+import HeroV1 from "@/components/sections/Hero-v1";
 import Personalities from "@/components/sections/Personalities";
 import Demo from "@/components/sections/Demo";
 import FinalCall from "@/components/sections/FinalCall";
@@ -8,7 +8,7 @@ import FinalCall from "@/components/sections/FinalCall";
 export default function Home() {
   return (
     <div className="relative min-h-screen">
-      <Hero />
+      <HeroV1 />
       <Personalities />
       <Demo />
       <FinalCall />
