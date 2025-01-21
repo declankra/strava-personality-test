@@ -9,9 +9,9 @@ import { ChevronUp } from "lucide-react";
 import { getSupabase } from "@/lib/supabase";
 
 const bubbleLetterStyle = {
-  textShadow: "2px 2px 0px #8B5CF6",
-  WebkitTextStroke: "2px #8B5CF6",
-  backgroundImage: "linear-gradient(45deg, #8B5CF6, #F59E0B)",
+  textShadow: "0px 2px 0px #8B5CF6",
+  WebkitTextStroke: "1.25px #8B5CF6",
+  backgroundColor: "#F59E0B",
   WebkitBackgroundClip: "text",
   WebkitTextFillColor: "transparent",
 };
