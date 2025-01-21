@@ -1,6 +1,6 @@
 {
-    "name": "Strava Personality Test",
-    "short_name": "Strava Test",
+    "name": "Athlete Personality Test",
+    "short_name": "Athlete Test",
     "icons": [
       {
         "src": "/icon.png",
