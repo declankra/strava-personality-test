@@ -191,7 +191,7 @@ export default function Hero() {
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="absolute left-1/2 -bottom-12 -translate-x-1/2 text-orange-500"
+              className="absolute right-[37%] -bottom-12 -translate-x-1/2 text-orange-500"
             >
               <ChevronUp className="w-12 h-12" />
             </motion.div>
