@@ -44,12 +44,10 @@ export default function Demo() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="w-full md:w-1/3"
+            className="w-full lg:w-[28%]"
           >
             <Iphone15Pro 
-              src="/images/iphone/preview.png" 
-              width={300}
-              height={612}
+              src="/images/iphone/preview.webp" 
             />
           </motion.div>
 
