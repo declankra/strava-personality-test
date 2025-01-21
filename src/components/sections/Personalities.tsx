@@ -1,5 +1,3 @@
-// src/components/sections/Personalities.tsx
-
 "use client";
 
 import { FocusCards } from "@/components/ui/focus-cards";
@@ -44,13 +42,34 @@ const personalityTypes = [
   }
 ];
 
+// Bubble text style matching Hero-v1
+const bubbleTextStyle = {
+  textShadow: "2px 2px 0px #8B5CF6",
+  WebkitTextStroke: "2px #8B5CF6",
+  backgroundImage: "linear-gradient(45deg, #8B5CF6, #F59E0B)",
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent",
+} as const;
+
 export default function Personalities() {
   return (
     <section className="py-20 px-4">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-6xl font-bold text-center mb-24">
-          Personality Types
-        </h2>
+        <div className="text-center mb-24">
+          {/* Category label */}
+          <span className="text-orange-500 font-bold tracking-widest text-sm block mb-4">
+            PERSONALITY TYPES
+          </span>
+          
+          {/* Main headline with bubble text style */}
+          <h2 
+            className="text-5xl md:text-6xl font-bold"
+            style={bubbleTextStyle}
+          >
+            Which Type Are You?
+          </h2>
+        </div>
+        
         <FocusCards cards={personalityTypes} />
       </div>
     </section>
