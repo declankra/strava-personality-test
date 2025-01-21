@@ -91,16 +91,22 @@ export default function Hero() {
     window.location.href = '/api/auth/strava';
   };
 
+  // Shared animation variants for zoom effect
+  const zoomAnimation = {
+    initial: { scale: 0.1, opacity: 0 },
+    animate: { scale: 1, opacity: 1 },
+    transition: { duration: 0.8, ease: "easeOut" }
+  };
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       <RetroGrid className="absolute inset-0" opacity={0.3} />
       
       <div className="relative z-10 text-center px-4 max-w-6xl mx-auto">
-        {/* Flow Steps */}
+        {/* Flow Steps with synchronized zoom animation */}
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex justify-center items-center mb-8 md:mb-12"
+          {...zoomAnimation}
+          className="flex justify-center mb-8 md:mb-12"
         >
           <div className="flex justify-center -space-x-4 md:-space-x-8 px-4 md:px-0">
             {flowSteps.map((step, index) => (
@@ -114,20 +120,16 @@ export default function Hero() {
                   alt={step.alt}
                   fill
                   className="object-contain"
-                  priority={index === 1} // Prioritize loading the center image
+                  priority={index === 1}
                 />
               </div>
             ))}
           </div>
         </motion.div>
         
-        {/* Main Headline with Zoom Animation */}
+        {/* Main Headline with matching zoom animation */}
         <div className="mb-16">
-          <motion.div 
-            initial={{ scale: 0.1, opacity: 0 }} 
-            animate={{ scale: 1, opacity: 1 }} 
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          >
+          <motion.div {...zoomAnimation}>
             <h1 
               className="text-6xl md:text-8xl font-bold mb-4 tracking-tight"
               style={bubbleLetterStyle}
