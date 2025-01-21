@@ -1,3 +1,4 @@
+// app/components/sections/Personalities.tsx
 "use client";
 
 import { FocusCards } from "@/components/ui/focus-cards";
@@ -53,24 +54,28 @@ const bubbleTextStyle = {
 
 export default function Personalities() {
   return (
-    <section className="py-20 px-4">
+    <section className="py-12 md:py-20 px-4">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-24">
-          {/* Category label */}
-          <span className="text-orange-500 font-bold tracking-widest text-sm block mb-4">
+        {/* Header section with responsive spacing and text sizes */}
+        <div className="text-center mb-12 md:mb-24">
+          {/* Category label - smaller on mobile */}
+          <span className="text-orange-500 font-bold tracking-widest text-xs md:text-sm block mb-2 md:mb-4">
             PERSONALITY TYPES
           </span>
           
-          {/* Main headline with bubble text style */}
+          {/* Main headline - responsive text size */}
           <h2 
-            className="text-5xl md:text-6xl font-bold"
+            className="text-4xl md:text-5xl lg:text-6xl font-bold px-4"
             style={bubbleTextStyle}
           >
             Which Type Are You?
           </h2>
         </div>
         
-        <FocusCards cards={personalityTypes} />
+        {/* Cards grid - FocusCards component handles its own responsiveness */}
+        <div className="px-2 md:px-0">
+          <FocusCards cards={personalityTypes} />
+        </div>
       </div>
     </section>
   );
