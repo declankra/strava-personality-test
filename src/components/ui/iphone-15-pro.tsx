@@ -95,9 +95,8 @@ export default function Iphone15Pro({
                 <Image
                   src={src}
                   alt="iPhone screen content"
-                  layout="fill"
-                  objectFit="cover"
-                  className="rounded-[55.75px]"
+                  fill
+                  className="rounded-[55.75px] object-cover"
                 />
               </div>
             </foreignObject>
