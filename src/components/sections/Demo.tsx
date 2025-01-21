@@ -47,7 +47,7 @@ export default function Demo() {
             className="w-full md:w-1/3"
           >
             <Iphone15Pro 
-              src="/images/iphone/preview.webp" 
+              src="/images/iphone/preview.png" 
               width={300}
               height={612}
             />
