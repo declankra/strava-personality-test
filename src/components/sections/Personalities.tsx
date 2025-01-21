@@ -54,7 +54,7 @@ const bubbleTextStyle = {
 
 export default function Personalities() {
   return (
-    <section className="mt-32 md:mt-20 py-12 md:py-20 px-4">
+    <section className="mt-20 md:mt-20 py-12 md:py-20 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Header section with responsive spacing and text sizes */}
         <div className="text-center mb-12 md:mb-24">
