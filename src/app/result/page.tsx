@@ -7,9 +7,19 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { getSupabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
-import { Share2 } from 'lucide-react';
+import { Share } from 'lucide-react';
 import { ConfettiButton } from '@/components/ui/confetti';
+import PulsatingButton from '@/components/ui/pulsating-button';
 import type { PersonalityResult } from '@/types/strava';
+
+// Add the bubble text style at the top of the file after imports
+const bubbleTextStyle = {
+  textShadow: "0px 2px 0px #8B5CF6",
+  WebkitTextStroke: "1.25px #8B5CF6",
+  backgroundColor: "#F59E0B",
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent",
+} as const;
 
 // Mapping of personality types to their image paths
 const personalityImages = {
@@ -47,16 +57,13 @@ function ResultContent() {
 
   // Share functionality
   const handleShare = async () => {
-    const shareText = `I'm a ${personalityType} Strava poster! ${
-      personality?.explanation
-    } What Strava poster are you?? Take the test now to find out! ${window.location.origin}`;
+    const shareText = `I'm a ${personalityType} Strava poster!\n\nWhat type of Strava poster are you??\n\nTake the test now to find out!\nhttps://athletepersonalitytest.com`;
 
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'My Strava Personality Test Result',
+          title: 'My Athlete Personality Test Result - Powered by Strava',
           text: shareText,
-          url: window.location.origin,
         });
       } catch (error) {
         console.error('Error sharing:', error);
@@ -132,7 +139,7 @@ function ResultContent() {
           animate={{ opacity: 1, y: 0 }}
           className="text-4xl md:text-6xl font-bold text-center mb-12"
         >
-          You are {personalityType}!
+          You are the <span style={bubbleTextStyle}>{personalityType}!</span>
         </motion.h1>
 
         <div className="grid md:grid-cols-2 gap-8 mb-16">
@@ -163,7 +170,7 @@ function ResultContent() {
               transition={{ delay: 0.5 }}
               className="text-xl text-orange-500 font-semibold"
             >
-              {Math.round((stats.typeCount / stats.total) * 100)}% of runners are also {personalityType}
+              {Math.round((stats.typeCount / stats.total) * 100)}% of Strava athletes are also {personalityType}s
             </motion.p>
             
             <motion.p
@@ -182,11 +189,11 @@ function ResultContent() {
               transition={{ delay: 0.9 }}
               className="space-y-2"
             >
-              <h3 className="font-semibold mb-2">Your style in action:</h3>
+              <h3 className="font-semibold mb-2">Your personality in action:</h3>
               {personality.sample_titles.map((title, index) => (
-                <p key={index} className="text-sm text-gray-600 dark:text-gray-400">
-                  "{title}"
-                </p>
+                <ul key={index} className="text-sm text-gray-600 dark:text-gray-400">
+                  <li>"{title}"</li>
+                </ul>
               ))}
             </motion.div>
           </div>
@@ -203,7 +210,7 @@ function ResultContent() {
             onClick={handleShare}
             className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-lg shadow-lg"
           >
-            <Share2 className="w-5 h-5 mr-2" />
+            <Share className="w-5 h-5 mr-2" />
             Share with friends
           </Button>
 
@@ -213,9 +220,8 @@ function ResultContent() {
               Post your result on Strava! Save the image above and use this caption:
             </p>
             <div className="bg-white dark:bg-gray-900 p-4 rounded-lg text-sm text-gray-600 dark:text-gray-400">
-              Just took the Strava Personality Test and found out I'm {personalityType}! 
-              {personality.explanation} 
-              Find out your style: {window.location.origin} 🏃‍♂️✨
+              Just took the Athlete Personality Test - powered by Strava - and found out I'm a {personalityType}! 
+              Find out your personality: athletepersonalitytest.com 🏃‍♂️✨
             </div>
           </div>
         </motion.div>
