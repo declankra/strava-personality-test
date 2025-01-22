@@ -14,6 +14,7 @@ import type { PersonalityResult } from '@/types/strava';
 import { toast } from 'sonner';
 import { ChevronUp, ArrowLeft } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import EmojiFeedback from '@/components/ui/emoji-feedback';
 
 // Add the bubble text style at the top of the file after imports
 const bubbleTextStyle = {
@@ -65,11 +66,6 @@ function ResultContent() {
   const personalityType = searchParams.get('type') as PersonalityType;
   const confettiRef = useRef<ConfettiRef>(null);
 
-  // Clear analysis session cookie once results are displayed
-  useEffect(() => {
-    document.cookie = 'analysis_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-  }, []);
-
   const handleShare = async () => {
     const emojis = personalityEmojis[personalityType as keyof typeof personalityEmojis] || '🎉';
     const shareText = `I'm a ${personalityType}! ${emojis}\n\nWhat do your Strava posts say about you?? 🤔\n\nTake the test now to find out! 🎉\nhttps://athletepersonalitytest.com `;
@@ -119,7 +115,7 @@ function ResultContent() {
         // Get the user's specific results
         const { data } = await supabase
           .from('strava_personality_test')
-          .select('personality_type, explanation, sample_titles')
+          .select('personality_type, explanation, sample_titles, session_id')
           .eq('personality_type', personalityType)
           .order('created_at', { ascending: false })
           .limit(1)
@@ -279,6 +275,20 @@ function ResultContent() {
             </motion.div>
           </div>
         </div>
+
+        {/* Emoji Feedback Section */}
+        {personality && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.0 }}
+          >
+            <EmojiFeedback
+              personalityType={personalityType}
+              sessionId={personality.session_id}
+            />
+          </motion.div>
+        )}
 
         {/* Share Section */}
         <motion.div

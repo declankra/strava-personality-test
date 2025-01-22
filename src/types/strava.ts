@@ -31,4 +31,5 @@ export interface PersonalityResult {
   personality_type: string;
   explanation: string;
   sample_titles: string[];
+  session_id: string;  // Add this field
 }
