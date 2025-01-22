@@ -239,7 +239,7 @@ function ResultContent() {
             </p>
             <div className="bg-white dark:bg-gray-900 p-4 rounded-lg text-sm text-gray-600 dark:text-gray-400">
               Just took the Athlete Personality Test - powered by Strava - and found out I'm a {personalityType}!
-              Find out your personality: athletepersonalitytest.com 🏃‍♂️✨
+              Find out your personality: athletepersonalitytest.com 🎉
             </div>
           </div>
         </motion.div>
