@@ -63,7 +63,8 @@ export async function GET(request: NextRequest) {
     const analysis: PersonalityResult = {
       personality_type: openAIResult.type,
       explanation: openAIResult.explanation,
-      sample_titles: openAIResult.sampleTitles
+      sample_titles: openAIResult.sampleTitles,
+      session_id: sessionId
     };
 
     // Log the result in Supabase
