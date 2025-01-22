@@ -210,7 +210,7 @@ function ResultContent() {
         >
           <Button
             onClick={handleShare}
-            className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-lg shadow-lg"
+            className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-lg shadow-lg font-extrabold"
           >
             <Share className="w-5 h-5 mr-2" />
             Share with friends
@@ -228,8 +228,8 @@ function ResultContent() {
             }}
             className="text-orange-500 flex flex-col items-center"
           >
-            <ChevronUp className="w-8 h-8" />
-            <span className="text-sm font-medium whitespace-nowrap mb-6">See what your friends are!</span>
+            <ChevronUp className="w-8 h-8 font-extrabold" />
+            <span className="text-sm font-extrabold whitespace-nowrap mb-6">See what your friends are!</span>
           </motion.div>
 
           <div className="mt-12 p-6 bg-gray-50 dark:bg-gray-800 rounded-xl">
