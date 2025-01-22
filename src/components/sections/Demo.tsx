@@ -17,7 +17,7 @@ const bubbleTextStyle = {
 
 export default function Demo() {
   return (
-    <section className="py-20 px-4">
+    <section className="mt-20 md:mt-20 py-12 md:py-20 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16">
