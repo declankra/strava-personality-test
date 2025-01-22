@@ -11,6 +11,7 @@ import { Share } from 'lucide-react';
 import { ConfettiButton } from '@/components/ui/confetti';
 import PulsatingButton from '@/components/ui/pulsating-button';
 import type { PersonalityResult } from '@/types/strava';
+import { ChevronUp } from 'lucide-react';
 
 // Add the bubble text style at the top of the file after imports
 const bubbleTextStyle = {
@@ -49,7 +50,7 @@ function ResultContent() {
   const [stats, setStats] = useState<{ total: number; typeCount: number } | null>(null);
   const [personality, setPersonality] = useState<PersonalityResult | null>(null);
   const personalityType = searchParams.get('type') as PersonalityType;
-  
+
   // Clear analysis session cookie once results are displayed
   useEffect(() => {
     document.cookie = 'analysis_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
@@ -82,7 +83,7 @@ function ResultContent() {
     const loadData = async () => {
       try {
         const supabase = getSupabase();
-        
+
         // Get total count and type-specific count
         const [{ count: total }, { count: typeCount }] = await Promise.all([
           supabase.from('strava_personality_test').select('*', { count: 'exact', head: true }),
@@ -161,6 +162,7 @@ function ResultContent() {
               className="object-cover"
             />
           </motion.div>
+          
 
           {/* Stats and Explanation */}
           <div className="flex flex-col justify-center space-y-6">
@@ -172,7 +174,7 @@ function ResultContent() {
             >
               {Math.round((stats.typeCount / stats.total) * 100)}% of Strava athletes are also {personalityType}s
             </motion.p>
-            
+
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -204,7 +206,7 @@ function ResultContent() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.1 }}
-          className="text-center space-y-6"
+          className="text-center space-y-4 relative"
         >
           <Button
             onClick={handleShare}
@@ -214,13 +216,29 @@ function ResultContent() {
             Share with friends
           </Button>
 
+          {/* Bouncing Arrow Animation - Moved below button */}
+          <motion.div
+            animate={{
+              y: [0, -8, 0],
+            }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="text-orange-500 flex flex-col items-center"
+          >
+            <ChevronUp className="w-8 h-8" />
+            <span className="text-sm font-medium whitespace-nowrap mb-6">See what your friends are!</span>
+          </motion.div>
+
           <div className="mt-12 p-6 bg-gray-50 dark:bg-gray-800 rounded-xl">
             <h3 className="text-xl font-semibold mb-4">Share on Strava</h3>
             <p className="text-gray-600 dark:text-gray-400 mb-4">
               Post your result on Strava! Save the image above and use this caption:
             </p>
             <div className="bg-white dark:bg-gray-900 p-4 rounded-lg text-sm text-gray-600 dark:text-gray-400">
-              Just took the Athlete Personality Test - powered by Strava - and found out I'm a {personalityType}! 
+              Just took the Athlete Personality Test - powered by Strava - and found out I'm a {personalityType}!
               Find out your personality: athletepersonalitytest.com 🏃‍♂️✨
             </div>
           </div>
