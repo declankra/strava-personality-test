@@ -278,9 +278,9 @@ function ResultContent() {
         >
           <Button
             onClick={handleShare}
-            className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-lg shadow-lg font-extrabold"
+            className="bg-orange-500 hover:bg-orange-600 text-white px-12 py-6 rounded-xl shadow-lg font-extrabold text-lg"
           >
-            <Share className="w-5 h-5 mr-2" />
+            <Share className="w-6 h-6 mr-3" />
             Share with friends
           </Button>
 
