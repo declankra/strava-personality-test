@@ -1,18 +1,19 @@
 // src/app/result/page.tsx
 'use client';
 
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useState, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { getSupabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
 import { Share } from 'lucide-react';
-import { ConfettiButton } from '@/components/ui/confetti';
+import Confetti, { ConfettiRef } from '@/components/ui/confetti';
 import PulsatingButton from '@/components/ui/pulsating-button';
 import type { PersonalityResult } from '@/types/strava';
 import { toast } from 'sonner';
 import { ChevronUp } from 'lucide-react';
+import confetti from 'canvas-confetti';
 
 // Add the bubble text style at the top of the file after imports
 const bubbleTextStyle = {
@@ -51,6 +52,7 @@ function ResultContent() {
   const [stats, setStats] = useState<{ total: number; typeCount: number } | null>(null);
   const [personality, setPersonality] = useState<PersonalityResult | null>(null);
   const personalityType = searchParams.get('type') as PersonalityType;
+  const confettiRef = useRef<ConfettiRef>(null);
 
   // Clear analysis session cookie once results are displayed
   useEffect(() => {
@@ -126,20 +128,76 @@ function ResultContent() {
     }
   }, [personalityType, router]);
 
+  // Trigger confetti
+  useEffect(() => {
+    if (!personality) return;
+
+    // Confetti configuration
+    const end = Date.now() + 3 * 1000; // 3 seconds duration
+    const colors = ['#F59E0B', '#8B5CF6', '#EF4444', '#10B981']; // Orange, Purple, Red, Green
+
+    const frame = () => {
+      if (Date.now() > end) return;
+
+      // Left cannon
+      confetti({
+        particleCount: 2,
+        angle: 60,
+        spread: 55,
+        startVelocity: 60,
+        origin: { x: 0, y: 0.5 },
+        colors: colors,
+        gravity: 0.8,
+        scalar: 1.2
+      });
+
+      // Right cannon
+      confetti({
+        particleCount: 2,
+        angle: 120,
+        spread: 55,
+        startVelocity: 60,
+        origin: { x: 1, y: 0.5 },
+        colors: colors,
+        gravity: 0.8,
+        scalar: 1.2
+      });
+
+      requestAnimationFrame(frame);
+    };
+
+    // Initial burst for extra effect
+    const burstConfetti = () => {
+      confetti({
+        particleCount: 80,
+        spread: 100,
+        origin: { x: 0.5, y: 0.7 }
+      });
+    };
+
+    burstConfetti();
+    frame();
+  }, [personality]);
+
+
   if (!personalityType || !personality || !stats) {
     return <LoadingSpinner />;
   }
 
   return (
     <div className="min-h-screen py-12 px-4">
-      {/* Confetti effect */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="fixed inset-0 pointer-events-none"
-      >
-        <ConfettiButton className="hidden" />
-      </motion.div>
+      {/* Confetti component */}
+      <div className="fixed inset-0 pointer-events-none">
+        <Confetti
+          ref={confettiRef}
+          manualstart={true}
+          options={{
+            gravity: 0.8,
+            spread: 90,
+            startVelocity: 45,
+          }}
+        />
+      </div>
 
       <div className="max-w-4xl mx-auto">
         {/* Result Title */}
