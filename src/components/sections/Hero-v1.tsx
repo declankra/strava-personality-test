@@ -9,6 +9,30 @@ import AvatarCircles from "@/components/ui/avatar-circles";
 import { ChevronUp } from "lucide-react";
 import { getSupabase } from "@/lib/supabase";
 
+// Static avatar data with diverse placeholder images
+const staticAvatars = [
+  {
+    imageUrl: "https://dgalywyr863hv.cloudfront.net/pictures/athletes/98367252/27519938/1/large.jpg",
+    profileUrl: "https://www.strava.com/athletes/98367252"
+  },
+  {
+    imageUrl: "https://dgalywyr863hv.cloudfront.net/pictures/athletes/140214409/31855741/2/large.jpg",
+    profileUrl: "https://www.strava.com/athletes/140214409"
+  },
+  {
+    imageUrl: "https://dgalywyr863hv.cloudfront.net/pictures/athletes/117864711/27778050/1/large.jpg",
+    profileUrl: "https://www.strava.com/athletes/117864711"
+  },
+  {
+    imageUrl: "https://dgalywyr863hv.cloudfront.net/pictures/athletes/120600523/32075775/1/large.jpg",
+    profileUrl: "https://www.strava.com/athletes/120600523"
+  },
+  {
+    imageUrl: "https://dgalywyr863hv.cloudfront.net/pictures/athletes/118093337/27516282/1/large.jpg",
+    profileUrl: "https://www.strava.com/athletes/118093337?oq=tre"
+  }
+];
+
 const bubbleLetterStyle = {
   textShadow: "0px 2px 0px #8B5CF6",
   WebkitTextStroke: "1.25px #8B5CF6",
@@ -17,11 +41,6 @@ const bubbleLetterStyle = {
   WebkitTextFillColor: "transparent",
   display: "inline-block", // Ensure the background only applies to the text
 };
-
-interface Avatar {
-  imageUrl: string;
-  profileUrl: string;
-}
 
 // Flow step images with their properties
 const flowSteps = [
@@ -50,38 +69,25 @@ const flowSteps = [
 
 export default function Hero() {
   const [userCount, setUserCount] = useState(0);
-  const [recentAvatars, setRecentAvatars] = useState<Avatar[]>([]);
 
   useEffect(() => {
     const supabase = getSupabase();
     
-    const fetchData = async () => {
+    const fetchUserCount = async () => {
       const { count } = await supabase
         .from('strava_personality_test')
         .select('*', { count: 'exact', head: true });
       
       setUserCount(count || 0);
-      
-      const { data: avatarData } = await supabase
-        .from('strava_personality_test')
-        .select('user_avatar, user_strava_profile')
-        .order('created_at', { ascending: false })
-        .limit(5);
-      
-      if (avatarData) {
-        setRecentAvatars(avatarData.map(user => ({
-          imageUrl: user.user_avatar as string ?? '',
-          profileUrl: user.user_strava_profile as string ?? ''
-        })));
-      }
     };
 
-    fetchData();
+    fetchUserCount();
 
+    // Set up real-time subscription for user count updates
     const channel = supabase
       .channel('strava-personality-changes')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'strava_personality_test' }, 
-          () => fetchData())
+          () => fetchUserCount())
       .subscribe();
 
     return () => {
@@ -202,11 +208,11 @@ export default function Hero() {
           {/* Social Proof */}
           <div className="mt-16 flex flex-col items-center">
             <AvatarCircles
-              avatarUrls={recentAvatars}
+              avatarUrls={staticAvatars}
               numPeople={userCount > 5 ? userCount - 5 : 0}
             />
             <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-              Join {userCount.toLocaleString()} athletes who've discovered their style
+              Join {userCount.toLocaleString()} athletes who've discovered their hidden personality
             </p>
           </div>
         </motion.div>
