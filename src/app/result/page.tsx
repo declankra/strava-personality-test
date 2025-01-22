@@ -82,7 +82,7 @@ function ResultContent() {
       toast.success('Results copied to clipboard! Share it with your friends! 🎉', {
         duration: 3000,
         className: 'bg-orange-500 text-white',
-      });    
+      });
     }
   };
 
@@ -170,7 +170,7 @@ function ResultContent() {
               className="object-cover"
             />
           </motion.div>
-          
+
 
           {/* Stats and Explanation */}
           <div className="flex flex-col justify-center space-y-6">
@@ -199,12 +199,14 @@ function ResultContent() {
               transition={{ delay: 0.9 }}
               className="space-y-2"
             >
-              <h3 className="font-semibold mb-2">Your personality in action:</h3>
-              {personality.sample_titles.map((title, index) => (
-                <ul key={index} className="text-sm text-gray-600 dark:text-gray-400">
-                  <li>"{title}"</li>
+              <div className="space-y-2">
+                <h3 className="font-semibold mb-2">Your personality in action:</h3>
+                <ul className="list-disc list-inside space-y-1 text-sm text-gray-600 dark:text-gray-400">
+                  {personality.sample_titles.map((title, index) => (
+                    <li key={index}>"{title}"</li>
+                  ))}
                 </ul>
-              ))}
+              </div>
             </motion.div>
           </div>
         </div>
