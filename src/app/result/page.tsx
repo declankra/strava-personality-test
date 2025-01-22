@@ -239,17 +239,6 @@ function ResultContent() {
             <ChevronUp className="w-8 h-8 font-extrabold" />
             <span className="text-sm font-extrabold whitespace-nowrap mb-6">See what your friends are!</span>
           </motion.div>
-
-          <div className="mt-12 p-6 bg-gray-50 dark:bg-gray-800 rounded-xl">
-            <h3 className="text-xl font-semibold mb-4">Share on Strava</h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-4">
-              Post your result on Strava! Save the image above and use this caption:
-            </p>
-            <div className="bg-white dark:bg-gray-900 p-4 rounded-lg text-sm text-gray-600 dark:text-gray-400">
-              Just took the Athlete Personality Test - powered by Strava - and found out I'm a {personalityType}!
-              Find out your personality: athletepersonalitytest.com 🎉
-            </div>
-          </div>
         </motion.div>
       </div>
     </div>
