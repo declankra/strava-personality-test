@@ -155,7 +155,7 @@ Possible personality types are:
 Respond with JSON in this format:
 {
   "type": "personality type name",
-  "explanation": "2-3 sentences explaining why this type matches, referencing specific titles",
+  "explanation": "2-3 sentences explaining why this personality type matches, referencing specific titles",
   "sampleTitles": ["array of 3 referenced titles that best demonstrate this style"]
 }`;
 
@@ -164,7 +164,7 @@ Respond with JSON in this format:
     messages: [
       {
         role: "system",
-        content: "You are analyzing Strava activity titles to determine a user's personality type. Your tone is known-it-all, witty, confident and almost-mystic, leaving the users with a sense of being understood. Be specific in your analysis and reference actual titles in your explanation."
+        content: "You are analyzing Strava activity titles to determine a user's personality type. Your tone is known-it-all, witty, confident and almost-mystic, leaving the users with a sense of being understood. Be specific in your analysis and reference actual titles in your explanation. Speak directly to the user."
       },
       {
         role: "user",
