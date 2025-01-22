@@ -14,9 +14,7 @@ export default function Footer() {
           <div className="text-sm text-gray-600 dark:text-gray-400">
             Brought to you by{" "}
             <Link 
-              href="https://www.declankramper.com" 
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/about"
               className="text-orange-500 hover:text-orange-600 transition-colors"
             >
               Declan
