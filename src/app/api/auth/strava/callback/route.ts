@@ -5,10 +5,14 @@ import { getSupabase } from '@/lib/supabase';
 import { cookies } from 'next/headers';
 import type { StravaAuthResponse } from '@/types/strava';
 
+// Required scopes for the application to function
+const REQUIRED_SCOPES = ['profile:read_all', 'activity:read_all'];
+
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const code = searchParams.get('code');
   const error = searchParams.get('error');
+  const scope = searchParams.get('scope');
 
   if (error) {
     console.error('Strava auth error:', error);
@@ -17,6 +21,20 @@ export async function GET(request: NextRequest) {
 
   if (!code) {
     return Response.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/error?message=no_code`);
+  }
+
+  // Check if all required scopes were granted
+  if (scope) {
+    const grantedScopes = scope.split(',');
+    const hasSufficientPermissions = REQUIRED_SCOPES.every(
+      requiredScope => grantedScopes.includes(requiredScope)
+    );
+
+    if (!hasSufficientPermissions) {
+      return Response.redirect(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/error?message=insufficient_permissions`
+      );
+    }
   }
 
   try {
