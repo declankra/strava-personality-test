@@ -15,6 +15,7 @@ import { toast } from 'sonner';
 import { ChevronUp, ArrowLeft } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import EmojiFeedback from '@/components/ui/emoji-feedback';
+import PaidFeaturePromotion from '@/components/ui/paid-feature-promotion';
 
 // Add the bubble text style at the top of the file after imports
 const bubbleTextStyle = {
@@ -322,6 +323,10 @@ function ResultContent() {
           </motion.div>
         </motion.div>
       </div>
+
+      {/* Paid Feature Promotion */}
+      <PaidFeaturePromotion personalityType={personalityType} />
+
       {/* Back button - positioned relatively above footer */}
       <motion.button
         initial={{ opacity: 0, x: -20 }}
