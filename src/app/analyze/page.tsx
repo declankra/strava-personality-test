@@ -32,7 +32,7 @@ export default function AnalyzePage() {
 
         // Update status messages
         setTimeout(() => setStatus('Fetching your activities...'), 1500);
-        setTimeout(() => setStatus('Analyzing your running style...'), 3000);
+        setTimeout(() => setStatus('Analyzing your posting style...'), 3000);
         setTimeout(() => setStatus('Almost there...'), 4500);
 
         // Make request with credentials
