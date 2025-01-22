@@ -7,7 +7,7 @@ export default function Footer() {
 
   return (
     <footer className="w-full mt-10">
-      <div className="max-w-7xl mx-auto py-6">
+      <div className="max-w-7xl px-2 mx-auto py-6">
         {/* Main footer content */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">
           {/* Left section */}
