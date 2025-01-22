@@ -36,6 +36,17 @@ const personalityImages = {
 
 type PersonalityType = keyof typeof personalityImages;
 
+// Emoji mappings for each personality type
+const personalityEmojis = {
+  'Motivator': '💪 🔥 ✨',
+  'Data Enthusiast': '📊 📈 🎯',
+  'Glory Chaser': '🏆 🥇 ⭐',
+  'Storyteller': '📖 ✍️ 🎬',
+  'Essentialist': '🥱🎯',
+  'Comedian': '😂 🤪 🎭'
+};
+
+
 // Loading component
 function LoadingSpinner() {
   return (
@@ -59,9 +70,9 @@ function ResultContent() {
     document.cookie = 'analysis_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
   }, []);
 
-  // Share functionality
   const handleShare = async () => {
-    const shareText = `I'm a ${personalityType}!\n\nWhat do your Strava posts say about you?? 🤔\n\nTake the test now to find out! 🎉\nhttps://athletepersonalitytest.com `;
+    const emojis = personalityEmojis[personalityType as keyof typeof personalityEmojis] || '🎉';
+    const shareText = `I'm a ${personalityType}! ${emojis}\n\nWhat do your Strava posts say about you?? 🤔\n\nTake the test now to find out! 🎉\nhttps://athletepersonalitytest.com `;
 
     if (navigator.share) {
       try {
