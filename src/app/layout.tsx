@@ -20,6 +20,26 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "Athlete Personality Test - Powered by Strava",
   description: "Discover your unique Athlete personality based on your Strava activity titles",
+
+    // Open Graph metadata for rich sharing previews
+    openGraph: {
+      title: "Athlete Personality Test - Powered by Strava",
+      description: "Discover your unique Athlete personality based on your Strava activity titles",
+      url: "https://athletepersonalitytest.com",
+      siteName: "Athlete Personality Test",
+      images: [
+        {
+          url: "/og-image.png", // This should be 1200x630px for optimal sharing
+          width: 1200,
+          height: 630,
+          alt: "Athlete Personality Test Preview",
+        }
+      ],
+      locale: "en_US",
+      type: "website",
+    },
+
+  // Favicon and manifest
   icons: {
     icon: [
       { url: "/favicon.ico" },
