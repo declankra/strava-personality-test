@@ -57,7 +57,8 @@ export default {
   		},
   		animation: {
   			pulse: 'pulse var(--duration) ease-out infinite',
-  			grid: 'grid 15s linear infinite'
+  			grid: 'grid 15s linear infinite',
+  			gradient: 'gradient 8s linear infinite'
   		},
   		keyframes: {
   			pulse: {
@@ -74,6 +75,11 @@ export default {
   				},
   				'100%': {
   					transform: 'translateY(0)'
+  				}
+  			},
+  			gradient: {
+  				to: {
+  					backgroundPosition: 'var(--bg-size) 0'
   				}
   			}
   		}
