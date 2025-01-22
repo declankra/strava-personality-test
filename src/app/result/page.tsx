@@ -11,6 +11,8 @@ import { Share } from 'lucide-react';
 import { ConfettiButton } from '@/components/ui/confetti';
 import PulsatingButton from '@/components/ui/pulsating-button';
 import type { PersonalityResult } from '@/types/strava';
+import { toast } from 'sonner';
+import { Toaster } from '@/components/ui/sonner';
 import { ChevronUp } from 'lucide-react';
 
 // Add the bubble text style at the top of the file after imports
@@ -70,11 +72,18 @@ function ResultContent() {
         console.error('Error sharing:', error);
         // Fallback to clipboard
         await navigator.clipboard.writeText(shareText);
+        toast.success('Results copied to clipboard! Share it with your friends! 🎉', {
+          duration: 3000,
+          className: 'bg-orange-500 text-white',
+        });
       }
     } else {
       // Clipboard fallback
       await navigator.clipboard.writeText(shareText);
-      // TODO: Show toast notification
+      toast.success('Results copied to clipboard! Share it with your friends! 🎉', {
+        duration: 3000,
+        className: 'bg-orange-500 text-white',
+      });    
     }
   };
 
