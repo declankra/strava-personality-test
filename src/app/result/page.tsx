@@ -12,7 +12,7 @@ import Confetti, { ConfettiRef } from '@/components/ui/confetti';
 import PulsatingButton from '@/components/ui/pulsating-button';
 import type { PersonalityResult } from '@/types/strava';
 import { toast } from 'sonner';
-import { ChevronUp } from 'lucide-react';
+import { ChevronUp, ArrowLeft } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 // Add the bubble text style at the top of the file after imports
@@ -301,6 +301,17 @@ function ResultContent() {
           </motion.div>
         </motion.div>
       </div>
+      {/* Back button - positioned relatively above footer */}
+      <motion.button
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 3 }}
+        onClick={() => router.push('/')}
+        className="relative mt-32 -mb-20 bottom-8 left-2 flex items-center gap-4 text-gray-300 hover:text-orange-600 transition-colors focus:outline-none"
+      >
+        <ArrowLeft className="w-5 h-5" />
+        <span className="font-regular text-sm">Back to Home</span>
+      </motion.button>
     </div>
   );
 }
