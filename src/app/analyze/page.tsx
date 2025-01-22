@@ -107,7 +107,7 @@ export default function AnalyzePage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-3xl font-bold mb-8">Analyzing Your Strava Style</h1>
+          <h1 className="text-3xl font-bold mb-8">Analyzing Your Athlete Personality</h1>
           
           {/* Progress bar */}
           <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
