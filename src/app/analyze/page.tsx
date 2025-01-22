@@ -4,6 +4,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import ProgressGenie from '@/components/ui/progress-genie';
 
 export default function AnalyzePage() {
   const router = useRouter();
@@ -14,7 +15,6 @@ export default function AnalyzePage() {
 
   useEffect(() => {
     const analyzeActivities = async () => {
-      // Prevent multiple simultaneous analysis attempts
       if (isAnalyzing) return;
       setIsAnalyzing(true);
 
@@ -65,16 +65,13 @@ export default function AnalyzePage() {
         setError(error instanceof Error ? error.message : 'Analysis failed');
         
         // Handle specific error cases
-        if (error instanceof Error) {
-          if (error.message.includes('token')) {
-            router.push('/api/auth/strava'); // Re-authenticate
-            return;
-          }
+        if (error instanceof Error && error.message.includes('token')) {
+          router.push('/api/auth/strava');
+          return;
         }
         
         router.push('/error?message=analysis_failed');
       } finally {
-        // Reset analyzing state in case user navigates back
         setIsAnalyzing(false);
       }
     };
@@ -109,14 +106,9 @@ export default function AnalyzePage() {
         >
           <h1 className="text-3xl font-bold mb-8">Analyzing Your Athlete Personality</h1>
           
-          {/* Progress bar */}
-          <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
-            <motion.div
-              className="bg-orange-500 h-2.5 rounded-full"
-              initial={{ width: 0 }}
-              animate={{ width: `${progress}%` }}
-              transition={{ duration: 0.5 }}
-            />
+          {/* Progress bar with genie */}
+          <div className="mb-4">
+            <ProgressGenie progress={progress} />
           </div>
 
           {/* Status message */}
