@@ -12,7 +12,6 @@ import { ConfettiButton } from '@/components/ui/confetti';
 import PulsatingButton from '@/components/ui/pulsating-button';
 import type { PersonalityResult } from '@/types/strava';
 import { toast } from 'sonner';
-import { Toaster } from '@/components/ui/sonner';
 import { ChevronUp } from 'lucide-react';
 
 // Add the bubble text style at the top of the file after imports
@@ -60,12 +59,12 @@ function ResultContent() {
 
   // Share functionality
   const handleShare = async () => {
-    const shareText = `I'm a ${personalityType} Strava poster!\n\nWhat type of Strava poster are you??\n\nTake the test now to find out!\nhttps://athletepersonalitytest.com`;
+    const shareText = `I'm a ${personalityType}!\n\nWhat do your Strava posts say about you?? 🤔\n\nTake the test now to find out! 🎉\nhttps://athletepersonalitytest.com `;
 
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'My Athlete Personality Test Result - Powered by Strava',
+          title: 'Just took the Athlete Personality Test - Powered by Strava',
           text: shareText,
         });
       } catch (error) {
