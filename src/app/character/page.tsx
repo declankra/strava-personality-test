@@ -36,7 +36,7 @@ export default function CharacterPage() {
         }
     };
     return (
-        <div className="min-h-screen py-20 px-4">
+        <div className="min-h-screen py-16 px-4">
             <div className="max-w-4xl mx-auto">
                 {/* Header Section */}
                 <motion.div
@@ -141,7 +141,7 @@ export default function CharacterPage() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 2 }}
                     onClick={() => router.back()}
-                    className="relative mt-32 -mb-20 bottom-8 left-2 flex items-center gap-4 text-gray-300 hover:text-orange-600 transition-colors focus:outline-none"
+                    className="relative mt-32 -mb-16 bottom-8 left-2 flex items-center gap-4 text-gray-300 hover:text-orange-600 transition-colors focus:outline-none"
                 >
                     <ArrowLeft className="w-5 h-5" />
                     <span className="font-regular text-sm">Back to results</span>
