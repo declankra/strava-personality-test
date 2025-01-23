@@ -8,7 +8,8 @@ import { getSupabase } from '@/lib/supabase';
 import type { 
   StravaActivity, 
   OpenAIPersonalityResult,
-  PersonalityResult 
+  PersonalityResult,
+  StravaAthlete
 } from '@/types/strava';
 
 const openai = new OpenAI({
@@ -49,16 +50,26 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Fetch Strava activities
-    const activities = await fetchStravaActivities(stravaToken);
-
-    // Get Strava user profile for logging
-    const profile = await fetchStravaProfile(stravaToken);
+    // Fetch Strava activities and athlete profile in parallel
+    const [activities, profile] = await Promise.all([
+      fetchStravaActivities(stravaToken),
+      fetchStravaProfile(stravaToken)
+    ]);
 
     // Extract titles and analyze
     const titles = activities.map(activity => activity.name);
     const openAIResult = await analyzeWithOpenAI(titles);
 
+    // Determine favorite activity type
+    const activityCounts = activities.reduce((acc: { [key: string]: number }, activity) => {
+      acc[activity.type] = (acc[activity.type] || 0) + 1;
+      return acc;
+    }, {});
+    
+    const favoriteActivity = Object.entries(activityCounts)
+      .sort(([,a], [,b]) => b - a)[0][0];
+
+    
     // Transform OpenAI result to database format
     const analysis: PersonalityResult = {
       personality_type: openAIResult.type,
@@ -81,6 +92,8 @@ export async function GET(request: NextRequest) {
           personality_type: analysis.personality_type,
           explanation: analysis.explanation,
           sample_titles: analysis.sample_titles,
+          favorite_activity: favoriteActivity,
+          gender: profile.sex || null,
           created_at: new Date().toISOString()
         })
         .select()
