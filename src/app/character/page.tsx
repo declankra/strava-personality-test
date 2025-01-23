@@ -98,25 +98,25 @@ export default function CharacterPage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.6 }}
-                    className="text-center"
+                    className="text-center px-4 sm:px-0"
                 >
-                    <div className="inline-block bg-gradient-to-r from-orange-500/20 via-purple-500/20 to-orange-500/20 p-8 rounded-2xl">
-                        <h2 className="text-2xl font-bold mb-4">
+                    <div className="inline-block w-full sm:w-auto bg-gradient-to-r from-orange-500/20 via-purple-500/20 to-orange-500/20 p-4 sm:p-8 rounded-2xl">
+                        <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">
                             Get Your Character Now
                         </h2>
-                        <p className="text-gray-600 dark:text-gray-400 mb-6">
+                        <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-4 sm:mb-6">
                             100% Unique • Use as Profile Picture • Money-back guarantee*
                         </p>
                         <div className="flex flex-col items-center gap-4">
                             <Button
                                 onClick={handleGetCharacter}
                                 disabled={loading}
-                                className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-6 rounded-xl text-lg font-extrabold shadow-lg"
+                                className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white px-4 sm:px-8 py-4 sm:py-6 rounded-xl text-base sm:text-lg font-extrabold shadow-lg"
                             >
-                                <Zap className="w-5 h-5 mr-2" />
+                                <Zap className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                                 Generate My Character · $1.69
                             </Button>
-                            <span className="text-sm text-gray-500 dark:text-gray-400">
+                            <span className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                                 Secure payment powered by Stripe
                             </span>
                         </div>
@@ -130,7 +130,7 @@ export default function CharacterPage() {
                     transition={{ delay: 0.8 }}
                     className="text-center mt-6"
                 >
-                    <p className="text-sm text-gray-400 dark:text-gray-500">
+                    <p className="text-xs sm:text-sm text-gray-400 dark:text-gray-500">
                         *If you're dissatisfied with your character, let me know why at business@dkbuilds.co and I'll personally refund you.
                     </p>
                 </motion.div>
