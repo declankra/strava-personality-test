@@ -224,8 +224,8 @@ function ResultContent() {
             animate={{ rotateY: 0, opacity: 1 }}
             transition={{
               type: "spring",
-              stiffness: 100,
-              damping: 20
+              stiffness: 50,
+              damping: 20, 
             }}
             className="relative aspect-square rounded-xl overflow-hidden shadow-xl"
           >
