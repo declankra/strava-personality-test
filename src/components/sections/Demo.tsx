@@ -47,7 +47,7 @@ export default function Demo() {
             className="w-full max-w-[300px] md:max-w-none lg:w-[28%]"
           >
             <Iphone15Pro 
-              src="/images/iphone/preview.webp"
+              src="/images/iPhone/preview-edit.webp"
               width={300}
             />
           </motion.div>
