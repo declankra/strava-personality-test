@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
           height: 512,
           num_inference_steps: 30,
           seed: -1,
-          negative_prompt: "human, realistic human features, person, realistic face, realistic body",
+          negative_prompt: "human, realistic human features, person, realistic face, realistic body, skin, human skin, bikini",
         },
       });
 
@@ -142,8 +142,8 @@ export async function POST(request: NextRequest) {
   
     const basePrompt = `Create a superhero character that embodies the essence of athletics - NOT a human form. The character should be a fantastical being with ${personalityTraits[userData.personalityType as keyof typeof personalityTraits]} because they are a ${userData.personalityType}. 
     Their form should suggest mastery of the sport where you ${userData.favoriteActivity} through supernatural abilities and cosmic energy.
-    The character should have otherworldly features like energy trails, elemental components, or ethereal forms.
-    Style: Epic comic book art with dramatic lighting and dynamic energy effects.`;
+    Style: Epic comic book art with dramatic lighting and dynamic energy effects.
+    The character should be fully clothed according to the sport where they ${userData.favoriteActivity}, to which they are actively participating.`;
   
     // Add gender to prompt if available
     const genderPrompt = userData.gender 
