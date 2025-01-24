@@ -2,7 +2,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Share2, Download } from 'lucide-react';
+import { Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -121,22 +121,6 @@ export default function CharacterResultPage() {
     }
   };
 
-  const handleShare = async () => {
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title: 'My Athlete Character',
-          text: 'Check out my personalized Athlete Character!',
-        });
-      } else {
-        await navigator.clipboard.writeText(window.location.href);
-        toast.success('Link copied to clipboard!');
-      }
-    } catch (error) {
-      toast.error('Failed to share');
-    }
-  };
-
   // Show loading state
   if (loading) {
     return (
@@ -207,28 +191,19 @@ export default function CharacterResultPage() {
           Perfect for your Strava profile picture! 🏃‍♂️
         </motion.p>
 
-        {/* Action Buttons */}
+        {/* Action Buttons - Simplified to single button */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8"
+          className="flex justify-center items-center mb-8"
         >
           <Button
             onClick={handleDownload}
-            className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white px-8"
+            className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white px-8 font-extrabold text-lg"
           >
             <Download className="w-4 h-4 mr-2" />
             Download Character
-          </Button>
-          
-          <Button
-            onClick={handleShare}
-            variant="outline"
-            className="w-full sm:w-auto border-orange-500 text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-950"
-          >
-            <Share2 className="w-4 h-4 mr-2" />
-            Share
           </Button>
         </motion.div>
 
