@@ -4,10 +4,10 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeft, Sparkles, Zap, Target, Medal } from "lucide-react";
+import { ArrowLeft, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 
 // Preview character images
 const previewImages = [
@@ -16,25 +16,85 @@ const previewImages = [
     "/images/character/preview-3.webp",
 ];
 
-export default function CharacterPage() {
+// Create a client component that uses useSearchParams
+const SearchParamsComponent = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [loading, setLoading] = useState(false);
+    const [stripeError, setStripeError] = useState<string | null>(null);
     const personalityType = searchParams.get("type");
+    useEffect(() => {
+        // Load Stripe.js
+        const loadStripe = async () => {
+            const { loadStripe } = await import('@stripe/stripe-js');
+            // Use development key in dev environment, production key in prod
+            const stripeKey = process.env.NODE_ENV === 'production'
+                ? process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+                : process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_DEV!;
+            const stripe = await loadStripe(stripeKey);
+            return stripe;
+        };
+
+        // Initialize Stripe
+        loadStripe().catch(error => {
+            console.error('Failed to load Stripe:', error);
+            setStripeError('Failed to initialize payment system');
+        });
+    }, []);
 
     // Handle payment initiation
     const handleGetCharacter = async () => {
         setLoading(true);
         try {
-            // TODO: Implement Stripe payment flow
-            // const response = await fetch('/api/create-payment-intent', ...);
+            // Create payment session
+            const response = await fetch('/api/character/payment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to create payment session');
+            }
+
+            const { clientSecret, sessionId } = await response.json();
+
+            // Initialize Stripe Elements
+            const { loadStripe } = await import('@stripe/stripe-js');
+            const stripeKey = process.env.NODE_ENV === 'production'
+                ? process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+                : process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_DEV!;
+            const stripe = await loadStripe(stripeKey);
+
+            if (!stripe) {
+                throw new Error('Failed to load Stripe');
+            }
+
+            // Redirect to checkout in the same tab
+            await stripe.redirectToCheckout({
+                sessionId,
+            });
+
+            // No need for error handling here since redirectToCheckout will handle errors
         } catch (error) {
-            console.error("Payment error:", error);
+            console.error('Payment error:', error);
             toast.error("Something went wrong. Please try again.");
-        } finally {
             setLoading(false);
         }
     };
+
+    // Show error state if Stripe failed to load
+    if (stripeError) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <p className="text-red-500 mb-4">{stripeError}</p>
+                    <Button onClick={() => router.push('/')}>Return Home</Button>
+                </div>
+            </div>
+        );
+    }
     return (
         <div className="min-h-screen py-16 px-4">
             <div className="max-w-4xl mx-auto">
@@ -114,7 +174,7 @@ export default function CharacterPage() {
                                 className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white px-4 sm:px-8 py-4 sm:py-6 rounded-xl text-base sm:text-lg font-extrabold shadow-lg"
                             >
                                 <Zap className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                                Generate My Character · $1.69
+                                {loading ? 'Processing...' : 'Generate My Character · $1.69'}
                             </Button>
                             <span className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                                 Secure payment powered by Stripe
@@ -148,5 +208,14 @@ export default function CharacterPage() {
                 </motion.button>
             </div>
         </div>
+    );
+}
+
+// Your main page component
+export default function CharacterPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <SearchParamsComponent />
+        </Suspense>
     );
 }
