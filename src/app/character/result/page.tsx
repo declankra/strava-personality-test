@@ -2,74 +2,112 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Share } from 'lucide-react';
+import { Share2, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
 import confetti from 'canvas-confetti';
+import { getSupabase } from '@/lib/supabase';
+
+interface UserData {
+  user_name?: string;
+  personality_type?: string;
+  favorite_activity?: string;
+  gender?: string;
+}
 
 export default function CharacterResultPage() {
   const router = useRouter();
   const [imageData, setImageData] = useState<string | null>(null);
-
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Try to get image data from session storage
-    const storedImage = sessionStorage.getItem('character_image');
-    
-    if (!storedImage) {
-      router.push('/error?message=no_character_found');
-      return;
-    }
+    const initializePage = async () => {
+      try {
+        // First check session storage
+        const storedImage = sessionStorage.getItem('character_image');
+        if (!storedImage) {
+          setError('no_character_found');
+          return;
+        }
 
-    setImageData(storedImage);
+        // Set image data first
+        setImageData(storedImage);
 
-    // Celebration effect
-    const end = Date.now() + 2 * 1000;
+        // Then fetch user data
+        const supabase = getSupabase();
+        const { data, error: supabaseError } = await supabase
+          .from('strava_personality_test')
+          .select('user_name, personality_type, favorite_activity, gender')
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .single();
 
-    const frame = () => {
-      confetti({
-        particleCount: 2,
-        angle: 60,
-        spread: 55,
-        origin: { x: 0, y: 0.5 }
-      });
+        if (supabaseError) {
+          console.error('Supabase error:', supabaseError);
+          // Don't set error here as we still want to show the image
+        } else {
+          setUserData(data as unknown as UserData);
+        }
 
-      confetti({
-        particleCount: 2,
-        angle: 120,
-        spread: 55,
-        origin: { x: 1, y: 0.5 }
-      });
+        // Trigger confetti effect
+        const end = Date.now() + 2 * 1000;
+        const colors = ['#F59E0B', '#8B5CF6'];
 
-      if (Date.now() < end) {
-        requestAnimationFrame(frame);
+        const frame = () => {
+          confetti({
+            particleCount: 2,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0, y: 0.5 },
+            colors
+          });
+
+          confetti({
+            particleCount: 2,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1, y: 0.5 },
+            colors
+          });
+
+          if (Date.now() < end) {
+            requestAnimationFrame(frame);
+          }
+        };
+
+        frame();
+      } catch (err) {
+        console.error('Initialization error:', err);
+        setError('initialization_failed');
+      } finally {
+        setLoading(false);
       }
     };
 
-    frame();
+    initializePage();
 
-    // Only clear storage when user navigates away
-    const handleBeforeUnload = () => {
-      sessionStorage.removeItem('character_image');
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-
+    // Cleanup function
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
+      // Only remove from sessionStorage when actually leaving the page
+      if (document.visibilityState === 'hidden') {
+        sessionStorage.removeItem('character_image');
+      }
     };
-  }, [router]);
+  }, []);
 
-  if (!imageData) {
-    return null; // Show nothing while loading
-  }
-
+  // Handle error states after loading is complete
+  useEffect(() => {
+    if (!loading && error) {
+      router.push(`/error?message=${error}`);
+    }
+  }, [loading, error, router]);
 
   const handleDownload = () => {
     try {
-      // Create temporary link and trigger download
       const link = document.createElement('a');
       link.href = imageData!;
       link.download = 'my-athlete-character.webp';
@@ -91,7 +129,6 @@ export default function CharacterResultPage() {
           text: 'Check out my personalized Athlete Character!',
         });
       } else {
-        // Fallback to copying image to clipboard
         await navigator.clipboard.writeText(window.location.href);
         toast.success('Link copied to clipboard!');
       }
@@ -100,23 +137,34 @@ export default function CharacterResultPage() {
     }
   };
 
-  if (!imageData) {
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500" />
+      </div>
+    );
+  }
+
+  // Don't render anything if we're about to redirect due to error
+  if (error) {
     return null;
   }
 
   return (
     <div className="min-h-screen py-20 px-4">
       <div className="max-w-4xl mx-auto">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          className="text-center mb-8"
         >
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            Your Athlete Character is Ready! 
+          <h1 className="text-4xl md:text-5xl font-bold mb-2">
+            {userData?.user_name ? `${userData.user_name}'s` : 'Your'} Athlete Character!
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300">
-            Here's your unique, AI-generated character based on your athlete personality
+          <p className="text-lg text-orange-500">
+            powered by Strava
           </p>
         </motion.div>
 
@@ -125,47 +173,73 @@ export default function CharacterResultPage() {
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ type: "spring", duration: 0.8 }}
-          className="relative aspect-square max-w-xl mx-auto mb-12 rounded-2xl overflow-hidden shadow-2xl"
+          className="relative aspect-square max-w-xl mx-auto mb-6 rounded-2xl overflow-hidden shadow-2xl"
         >
           <img 
-            src={imageData}
+            src={imageData || ''}
             alt="Your Athlete Character"
             className="w-full h-full object-cover"
           />
         </motion.div>
+
+        {/* Disclaimer */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="text-xs text-gray-400 text-center mb-8 max-w-2xl mx-auto"
+        >
+          This is a generative image based on your personality type
+          {userData?.personality_type && ` (${userData.personality_type})`}
+          {userData?.favorite_activity && `, most frequent Strava activity (${userData.favorite_activity})`}
+          {userData?.gender && `, and your gender (${userData.gender})`}. Because of its generative nature,
+          it may not be accurate or you simply might not like it. If that's the case, email me at 
+          business@dkbuilds.co and I'll personally refund you.
+        </motion.p>
+
+        {/* Use Case */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+          className="text-center mb-8 font-semibold text-lg"
+        >
+          Perfect for your Strava profile picture! 🏃‍♂️
+        </motion.p>
 
         {/* Action Buttons */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+          className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8"
         >
           <Button
             onClick={handleDownload}
             className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white px-8"
           >
+            <Download className="w-4 h-4 mr-2" />
             Download Character
           </Button>
           
           <Button
             onClick={handleShare}
             variant="outline"
-            className="w-full sm:w-auto"
+            className="w-full sm:w-auto border-orange-500 text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-950"
           >
-            <Share className="w-4 h-4 mr-2" />
+            <Share2 className="w-4 h-4 mr-2" />
             Share
           </Button>
         </motion.div>
 
-        {/* Footer Note */}
+        {/* Motivational Text */}
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-          className="text-center mt-12 text-sm text-gray-500"
+          transition={{ delay: 0.6 }}
+          className="text-center text-lg font-medium text-gray-600 dark:text-gray-300"
         >
-          Perfect for your Strava profile picture! 🏃‍♂️
+          Now, keep having fun with it 🫡
         </motion.p>
       </div>
     </div>
