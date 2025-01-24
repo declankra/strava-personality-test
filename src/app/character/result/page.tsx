@@ -9,12 +9,14 @@ import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
 import confetti from 'canvas-confetti';
 import { getSupabase } from '@/lib/supabase';
+import WrittenFeedback from '@/components/ui/written-feedback';
 
 interface UserData {
   user_name?: string;
   personality_type?: string;
   favorite_activity?: string;
   gender?: string;
+  session_id?: string;
 }
 
 export default function CharacterResultPage() {
@@ -41,7 +43,7 @@ export default function CharacterResultPage() {
         const supabase = getSupabase();
         const { data, error: supabaseError } = await supabase
           .from('strava_personality_test')
-          .select('user_name, personality_type, favorite_activity, gender')
+          .select('user_name, personality_type, favorite_activity, gender, session_id')
           .order('created_at', { ascending: false })
           .limit(1)
           .single();
@@ -50,7 +52,7 @@ export default function CharacterResultPage() {
           console.error('Supabase error:', supabaseError);
           // Don't set error here as we still want to show the image
         } else {
-          setUserData(data as unknown as UserData);
+          setUserData(data as UserData);
         }
 
         // Trigger confetti effect
@@ -219,6 +221,17 @@ export default function CharacterResultPage() {
         >
           Now, keep having fun with it 🫡
         </motion.p>
+
+        {/* Written Feedback Section */}
+        {userData?.session_id && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7 }}
+          >
+            <WrittenFeedback sessionId={userData.session_id} />
+          </motion.div>
+        )}
       </div>
     </div>
   );
