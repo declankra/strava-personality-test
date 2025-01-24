@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
           height: 512,
           num_inference_steps: 30,
           seed: -1,
-          negative_prompt: "Deformed, unrealistic, cartoon, anime, sketch",
+          negative_prompt: "human, realistic human features, person, realistic face, realistic body",
         },
       });
 
@@ -132,25 +132,23 @@ export async function POST(request: NextRequest) {
   // Helper function to generate image prompt
   function generateImagePrompt(userData: StrokeData & { personalityType: string }) {
     const personalityTraits = {
-      'Motivator': 'confident and inspiring',
-      'Data Enthusiast': 'analytical and focused',
-      'Glory Chaser': 'determined and competitive',
-      'Storyteller': 'contemplative and expressive',
-      'Essentialist': 'minimalist and straightforward',
-      'Comedian': 'playful and lighthearted'
+      'Motivator': 'radiating energy and inspiring aura',
+      'Data Enthusiast': 'calculated precision and cybernetic enhancements',
+      'Glory Chaser': 'fierce competitive spirit and powerful presence',
+      'Storyteller': 'mystical and ethereal energy',
+      'Essentialist': 'pure elemental form and focused power',
+      'Comedian': 'whimsical cosmic energy and playful aura'
     };
   
-    const basePrompt = `A realistic portrait of an athlete with ${personalityTraits[userData.personalityType as keyof typeof personalityTraits]} expression. 
-      They are wearing athletic gear appropriate for ${userData.favoriteActivity}. 
-      The lighting is dramatic and emphasizes their determination.`;
+    const basePrompt = `Create a superhero character that embodies the essence of athletics - NOT a human form. The character should be a fantastical being with ${personalityTraits[userData.personalityType as keyof typeof personalityTraits]} because they are a ${userData.personalityType}. 
+    Their form should suggest mastery of the sport where you ${userData.favoriteActivity} through supernatural abilities and cosmic energy.
+    The character should have otherworldly features like energy trails, elemental components, or ethereal forms.
+    Style: Epic comic book art with dramatic lighting and dynamic energy effects.`;
   
-    // Add gender detail if available
-    const demographicDetails = [];
-    if (userData.gender) demographicDetails.push(userData.gender);
-    
-    const demographicPrompt = demographicDetails.length > 0 
-      ? `The athlete is ${demographicDetails.join(', ')} gender (where M is male and F is female).` 
+    // Add gender to prompt if available
+    const genderPrompt = userData.gender 
+      ? `Make the Superhero athlete ${userData.gender === 'M' ? 'male' : 'female'}.` 
       : '';
   
-    return `${basePrompt} ${demographicPrompt} High quality, photorealistic, detailed.`;
+    return `${basePrompt} ${genderPrompt} High quality, detailed, dynamic pose, dramatic atmosphere, epic scale`;
   }
