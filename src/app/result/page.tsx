@@ -141,7 +141,7 @@ function ResultContent() {
     if (!personality) return;
 
     // Confetti configuration
-    const end = Date.now() + 3 * 1000; // 3 seconds duration
+    const end = Date.now() + 2.25 * 1000; // 2.25 seconds duration
     const colors = ['#F59E0B', '#8B5CF6', '#EF4444', '#10B981']; // Orange, Purple, Red, Green
 
     const frame = () => {
