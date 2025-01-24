@@ -145,9 +145,12 @@ export default function CharacterResultPage() {
           className="text-center mb-8"
         >
           <h1 className="text-4xl md:text-5xl font-bold mb-2">
-            {userData?.user_name ? `${userData.user_name}'s` : 'Your'} Athlete Character!
+            {userData?.user_name ? `${userData.user_name}'s` : 'Your'}{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-purple-600">
+              Athlete Character
+            </span>!
           </h1>
-          <p className="text-lg text-orange-500">
+          <p className="text-lg text-orange-500 italic">
             powered by Strava
           </p>
         </motion.div>
@@ -196,7 +199,7 @@ export default function CharacterResultPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="flex justify-center items-center mb-8"
+          className="flex justify-center items-center mb-6"
         >
           <Button
             onClick={handleDownload}
@@ -212,7 +215,7 @@ export default function CharacterResultPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="text-center text-lg font-medium text-gray-600 dark:text-gray-300"
+          className="text-center text-md font-medium text-gray-600 dark:text-gray-300 italic"
         >
           Now, keep having fun with it 🫡
         </motion.p>
