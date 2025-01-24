@@ -26,14 +26,20 @@ const contributors = [
   {
     name: "Will",
     role: "Marketing Wizard",
-    contribution: "Delivered feedback that was the inspiration and guiding force for the UX/UI and design of the site.",
+    contribution: "Delivered feedback that was the guiding force for the UX/UI and design of the site.",
     stravaProfile: "https://www.strava.com/athletes/117864711",
   },
   {
     name: "Jack",
     role: "Mr. Get Yo Bag Up",
-    contribution: "Responsible for the creation of the paid feature - 'Athlete Characters'.",
+    contribution: "Responsible for the paid feature - 'Athlete Characters'.",
     stravaProfile: "https://www.strava.com/athletes/120600523",
+  },
+  {
+    name: "Dan",
+    role: "$NBIS",
+    contribution: "Introduced Nebius AI Studio's text-to-image model which powers the Athlete Character feature with high quality, cost-effective image generation.",
+    stravaProfile: "https://www.strava.com/athletes/2862666",
   },
   {
     name: "Katie",
