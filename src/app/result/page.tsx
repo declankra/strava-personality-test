@@ -9,7 +9,6 @@ import { getSupabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
 import { Share } from 'lucide-react';
 import Confetti, { ConfettiRef } from '@/components/ui/confetti';
-import PulsatingButton from '@/components/ui/pulsating-button';
 import type { PersonalityResult } from '@/types/strava';
 import { toast } from 'sonner';
 import { ChevronUp, ArrowLeft } from 'lucide-react';
@@ -141,7 +140,7 @@ function ResultContent() {
     if (!personality) return;
 
     // Confetti configuration
-    const end = Date.now() + 2.25 * 1000; // 2.25 seconds duration
+    const end = Date.now() + 1.75 * 1000; // 1.75 seconds duration
     const colors = ['#F59E0B', '#8B5CF6', '#EF4444', '#10B981']; // Orange, Purple, Red, Green
 
     const frame = () => {
