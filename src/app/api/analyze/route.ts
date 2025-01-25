@@ -5,8 +5,8 @@ import { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
 import OpenAI from 'openai';
 import { getSupabase } from '@/lib/supabase';
-import type { 
-  StravaActivity, 
+import type {
+  StravaActivity,
   OpenAIPersonalityResult,
   PersonalityResult,
   StravaAthlete
@@ -157,7 +157,7 @@ export async function GET(request: NextRequest) {
       .select('*')
       .eq('session_id', sessionId)
       .single();
-  
+
     if (existingAnalysis) {
       return Response.json({
         type: existingAnalysis.personality_type,
@@ -180,9 +180,9 @@ export async function GET(request: NextRequest) {
       acc[activity.type] = (acc[activity.type] || 0) + 1;
       return acc;
     }, {});
-    
+
     const favoriteActivity = Object.entries(activityCounts)
-      .sort(([,a], [,b]) => b - a)[0][0];
+      .sort(([, a], [, b]) => b - a)[0][0];
 
     // Transform OpenAI result to database format
     const analysis: PersonalityResult = {
@@ -234,6 +234,10 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Unexpected error in analyze route:', error);
+    // Check if it's our title selection error
+    if (error instanceof Error && error.message === 'title_selection_error') {
+      return Response.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/error?message=title_selection_error`);
+    }
     return new Response('Analysis failed', { status: 500 });
   }
 }

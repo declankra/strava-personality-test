@@ -10,6 +10,7 @@ import { AlertCircle } from 'lucide-react';
 const ERROR_MESSAGES = {
   auth_failed: 'Authentication failed. Please try again.',
   insufficient_permissions: 'To analyze your athlete personality, we need access to:',
+  title_selection_error: 'Oops! Our analysis genie had trouble reading some of your activity titles. This sometimes happens when processing unique or special characters. Please try again - it usually works on the second attempt!',
   default: 'An unexpected error occurred. Please try again.'
 };
 
@@ -26,7 +27,11 @@ function ErrorContent() {
   const errorCode = searchParams.get('message') || 'default';
 
   const handleRetry = () => {
-    router.push('/api/auth/strava');
+    if (errorCode === 'title_selection_error') {
+      router.push('/api/auth/strava');
+    } else {
+      router.push('/api/auth/strava');
+    }
   };
 
   return (
@@ -75,6 +80,8 @@ function ErrorContent() {
             >
               {errorCode === 'insufficient_permissions' 
                 ? 'Grant Permissions' 
+                : errorCode === 'title_selection_error'
+                ? 'Analysis Needs Another Try'
                 : 'Try Again'}
             </Button>
 
