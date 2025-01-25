@@ -26,13 +26,19 @@ export interface StravaAuthResponse {
 export interface OpenAIPersonalityResult {
   type: string;
   explanation: string;
-  sampleTitles: string[];
+  sampleTitles: Array<{
+    title: string;
+    activityId: number;
+  }>;
 }
 
 // Database result interface
 export interface PersonalityResult {
   personality_type: string;
   explanation: string;
-  sample_titles: string[];
-  session_id: string;  // Add this field
+  sample_titles: Array<{
+    title: string;
+    activity_url: string;
+  }>;
+  session_id: string;
 }

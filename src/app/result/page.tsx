@@ -71,12 +71,12 @@ function ResultContent() {
 
 
   const handleShare = async () => {
-        // Track share attempt
-        op.track('share_button_click', {
-          location: 'results_page',
-          personality_type: personalityType,
-          share_type: typeof navigator.share !== 'undefined' ? 'native' : 'clipboard'
-        });
+    // Track share attempt
+    op.track('share_button_click', {
+      location: 'results_page',
+      personality_type: personalityType,
+      share_type: typeof navigator.share !== 'undefined' ? 'native' : 'clipboard'
+    });
     const emojis = personalityEmojis[personalityType as keyof typeof personalityEmojis] || '🎉';
     const shareText = `I'm a ${personalityType}! ${emojis}\n\nWhat do your Strava posts say about you?? 🤔\n\nTake the test now to find out! 🎉\nhttps://athletepersonalitytest.com `;
 
@@ -212,11 +212,50 @@ function ResultContent() {
     return <LoadingSpinner />;
   }
 
+  // Sample Titles section component for results page
+  const SampleTitles = ({ titles }: { titles: Array<{ title: string; activity_url: string }> }) => {
+    return (
+      <div className="space-y-2">
+        <h3 className="font-semibold mb-2">Your personality in action:</h3>
+        <ul className="space-y-3">
+          {titles.map((title, index) => (
+            <li key={index} className="flex items-start gap-2">
+              <span className="text-sm text-gray-600 dark:text-gray-400">
+                "{title.title}"
+              </span>
+              <a
+                href={title.activity_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-xs text-gray-500 hover:text-gray-600 transition-colors whitespace-nowrap"
+              >
+                View on Strava
+                <svg
+                  className="w-3 h-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                  />
+                </svg>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen py-12 px-4">
       {/* Track page view duration */}
-      <AnalyticsEvent 
-        event="results_page_view" 
+      <AnalyticsEvent
+        event="results_page_view"
         properties={{ personality_type: personalityType }}
         timeOnPage={true}
         trigger="unmount"
@@ -252,7 +291,7 @@ function ResultContent() {
             transition={{
               type: "spring",
               stiffness: 50,
-              damping: 20, 
+              damping: 20,
             }}
             className="relative aspect-square rounded-xl overflow-hidden shadow-xl"
           >
@@ -292,14 +331,7 @@ function ResultContent() {
               transition={{ delay: 0.9 }}
               className="space-y-2"
             >
-              <div className="space-y-2">
-                <h3 className="font-semibold mb-2">Your personality in action:</h3>
-                <ul className="list-disc list-inside space-y-1 text-sm text-gray-600 dark:text-gray-400">
-                  {personality.sample_titles.map((title, index) => (
-                    <li key={index}>"{title}"</li>
-                  ))}
-                </ul>
-              </div>
+              <SampleTitles titles={personality.sample_titles} />
             </motion.div>
           </div>
         </div>
