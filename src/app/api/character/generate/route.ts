@@ -17,18 +17,20 @@ interface NebiusImageParams extends OpenAI.ImageGenerateParams {
     };
   }
 
-// Create client with the correct type
-const nebius = new OpenAI({
-    baseURL: "https://api.studio.nebius.ai/v1/",
-    apiKey: process.env.NEBIUS_API_KEY,
-  }) as unknown as OpenAI & { images: { generate(params: NebiusImageParams): Promise<any> } };
-  
+const apiKey = process.env.NEBIUS_API_KEY;
 
-  const stripe = new Stripe(
-    process.env.NODE_ENV === 'production'
-      ? process.env.STRIPE_SECRET_KEY!
-      : process.env.STRIPE_SECRET_KEY_DEV!,
-  );
+const nebius = apiKey
+  ? new OpenAI({
+      baseURL: "https://api.studio.nebius.ai/v1/",
+      apiKey,
+    }) as unknown as OpenAI & { images: { generate(params: NebiusImageParams): Promise<any> } }
+  : null;
+
+const stripe = new Stripe(
+  process.env.NODE_ENV === 'production'
+    ? process.env.STRIPE_SECRET_KEY!
+    : process.env.STRIPE_SECRET_KEY_DEV!,
+);
   
 // Types for our response
 interface StrokeData {
@@ -50,6 +52,15 @@ interface UserData {
   
 export async function POST(request: NextRequest) {
     try {
+      // Check if Nebius client is properly initialized
+      if (!nebius) {
+        console.error('Nebius client not initialized - missing API key');
+        return Response.json(
+          { error: 'Image generation service unavailable' },
+          { status: 503 }
+        );
+      }
+
       const cookieStore = cookies();
       const sessionId = cookieStore.get('analysis_session')?.value;
       const stripeSessionId = cookieStore.get('stripe_session')?.value;
