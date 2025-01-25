@@ -71,7 +71,7 @@ Possible personality types are:
 5. "Essentialist" - Doesn't change the default titles, no frills, no fuss
 6. "Comedian" - Crafts witty puns and jokes to entertain and lighten the mood
 
-IMPORTANT: You must select THREE titles from the EXACT list above. DO NOT MODIFY OR PARAPHRASE THE TITLES. 
+CRITICAL: You must select THREE titles from the EXACT list above. DO NOT MODIFY OR PARAPHRASE THE TITLES. 
 For each selected title, I will look up its corresponding activity ID, so the TITLES MUST MATCH EXACTLY.
 !!!! WRITE THE SAMPLE TITLES VERBATIM (INCLUDE QUOTES AND ANY SPECIAL CHARACTERS) !!!!! 
 IF YOU ALTER THE TITLES IN ANY WAY, YOU WILL BE FIRED.
