@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { ChevronUp } from "lucide-react";
 import { useOpenPanel } from '@openpanel/nextjs';
+import { toast } from "sonner";
 
 // Define the bubble text styles with regular and inverted variants
 const bubbleTextStyle = {
@@ -27,34 +28,68 @@ export default function FinalCall() {
   };
 
   const handleShare = async () => {
-        // Track share attempt
-        op.track('share_button_click', {
-          location: 'final_call_section',
-          share_type: typeof navigator.share !== 'undefined' ? 'native' : 'clipboard'
-        });
-    if (navigator.share) {
-      try {
+    // Track initial share attempt
+    op.track('share_button_click', {
+      location: 'final_call_section',
+      share_type: typeof navigator.share !== 'undefined' ? 'native' : 'clipboard'
+    });
+
+    try {
+      if (navigator.share) {
         await navigator.share({
           title: 'Athlete Personality Test - Powered by Strava',
           text: 'Discover your unique athlete personality based on your Strava activity titles! Take the test now.',
           url: window.location.href,
         });
-                // Track successful share
-                op.track('share_completed', {
-                  location: 'final_call_section',
-                  share_type: 'native'
-                });
-      } catch (error) {
-        console.error('Error sharing:', error);
+        
+        // Track successful native share
+        op.track('share_completed', {
+          location: 'final_call_section',
+          share_type: 'native'
+        });
+      } else {
+        // Fallback to copying URL to clipboard
+        await navigator.clipboard.writeText(window.location.href);
+        
+        // Track successful clipboard copy
+        op.track('share_completed', {
+          location: 'final_call_section',
+          share_type: 'clipboard'
+        });
+        
+        // Show success toast for clipboard copy
+        toast.success('Link copied to clipboard! Share it with your friends! 🎉', {
+          duration: 3000,
+          className: 'bg-orange-500 text-white',
+        });
       }
-    } else {
-      // Fallback to copying URL to clipboard
-      navigator.clipboard.writeText(window.location.href);
-      op.track('share_completed', {
-        location: 'final_call_section',
-        share_type: 'clipboard'
+    } catch (error) {
+      // Check if the error is a user cancellation
+      if (error instanceof Error && error.name === 'AbortError') {
+        // Track share cancellation
+        op.track('share_cancelled', {
+          location: 'final_call_section',
+          share_type: 'native'
+        });
+        // Don't show an error toast for cancellation
+        return;
+      }
+      
+      // Handle actual errors
+      console.error('Share error:', error);
+      
+      // Show error toast
+      toast.error('Failed to share. Please try again.', {
+        duration: 3000
       });
-      // TODO: Add toast notification for feedback
+      
+      // Track actual sharing error
+      op.track('share_error', {
+        location: 'final_call_section',
+        error_type: error instanceof Error ? error.name : 'unknown',
+        error_message: error instanceof Error ? error.message : 'unknown error',
+        share_type: typeof navigator.share !== 'undefined' ? 'native' : 'clipboard'
+      });
     }
   };
 
