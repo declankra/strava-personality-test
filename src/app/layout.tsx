@@ -18,6 +18,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'),
   title: "Athlete Personality Test - Powered by Strava",
   description: "Discover your unique Athlete personality based on your Strava activity titles",
 
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
     openGraph: {
       title: "Athlete Personality Test - Powered by Strava",
       description: "Discover your unique Athlete personality based on your Strava activity titles",
-      url: "https://athletepersonalitytest.com",
+      url: process.env.NEXT_PUBLIC_BASE_URL,
       siteName: "Athlete Personality Test",
       images: [
         {
