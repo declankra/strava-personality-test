@@ -15,6 +15,8 @@ import { ChevronUp, ArrowLeft } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import EmojiFeedback from '@/components/ui/emoji-feedback';
 import PaidFeaturePromotion from '@/components/ui/paid-feature-promotion';
+import { useOpenPanel } from '@openpanel/nextjs';
+import { AnalyticsEvent } from '@/lib/analytics/openpanel/analytics-event';
 
 // Add the bubble text style at the top of the file after imports
 const bubbleTextStyle = {
@@ -65,8 +67,16 @@ function ResultContent() {
   const [personality, setPersonality] = useState<PersonalityResult | null>(null);
   const personalityType = searchParams.get('type') as PersonalityType;
   const confettiRef = useRef<ConfettiRef>(null);
+  const op = useOpenPanel();
+
 
   const handleShare = async () => {
+        // Track share attempt
+        op.track('share_button_click', {
+          location: 'results_page',
+          personality_type: personalityType,
+          share_type: typeof navigator.share !== 'undefined' ? 'native' : 'clipboard'
+        });
     const emojis = personalityEmojis[personalityType as keyof typeof personalityEmojis] || '🎉';
     const shareText = `I'm a ${personalityType}! ${emojis}\n\nWhat do your Strava posts say about you?? 🤔\n\nTake the test now to find out! 🎉\nhttps://athletepersonalitytest.com `;
 
@@ -75,6 +85,12 @@ function ResultContent() {
         await navigator.share({
           title: 'Just took the Athlete Personality Test - Powered by Strava',
           text: shareText,
+        });
+        // Track successful share
+        op.track('share_completed', {
+          location: 'results_page',
+          personality_type: personalityType,
+          share_type: 'native'
         });
       } catch (error) {
         console.error('Error sharing:', error);
@@ -88,6 +104,11 @@ function ResultContent() {
     } else {
       // Clipboard fallback
       await navigator.clipboard.writeText(shareText);
+      op.track('share_completed', {
+        location: 'results_page',
+        personality_type: personalityType,
+        share_type: 'clipboard'
+      });
       toast.success('Results copied to clipboard! Share it with your friends! 🎉', {
         duration: 3000,
         className: 'bg-orange-500 text-white',
@@ -193,6 +214,13 @@ function ResultContent() {
 
   return (
     <div className="min-h-screen py-12 px-4">
+      {/* Track page view duration */}
+      <AnalyticsEvent 
+        event="results_page_view" 
+        properties={{ personality_type: personalityType }}
+        timeOnPage={true}
+        trigger="unmount"
+      />
       {/* Confetti component */}
       <div className="fixed inset-0 pointer-events-none">
         <Confetti

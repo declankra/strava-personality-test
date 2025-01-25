@@ -1,9 +1,11 @@
+// src/components/ui/written-feedback.tsx
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import { getSupabase } from "@/lib/supabase";
 import { toast } from "sonner";
+import { useOpenPanel } from '@openpanel/nextjs';
 
 interface WrittenFeedbackProps {
   sessionId: string;
@@ -13,6 +15,17 @@ export default function WrittenFeedback({ sessionId }: WrittenFeedbackProps) {
   const [feedback, setFeedback] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const op = useOpenPanel();
+
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+    if (open) {
+      op.track('feedback_popup_opened', {
+        session_id: sessionId,
+        location: 'character_result'
+      });
+    }
+  };
 
   const handleSubmit = async () => {
     if (!feedback.trim()) {
@@ -25,7 +38,6 @@ export default function WrittenFeedback({ sessionId }: WrittenFeedbackProps) {
     try {
       const supabase = getSupabase();
       
-      // Update the strava_personality_test table
       const { error } = await supabase
         .from('strava_personality_test')
         .update({ paid_user_feedback: feedback })
@@ -33,15 +45,25 @@ export default function WrittenFeedback({ sessionId }: WrittenFeedbackProps) {
 
       if (error) throw error;
 
-      // Show success message
+      // Track successful feedback submission
+      op.track('feedback_submitted', {
+        session_id: sessionId,
+        location: 'character_result',
+        feedback_length: feedback.length
+      });
+
       toast.success("Thanks for your feedback!");
-      
-      // Close popover and reset form
       setIsOpen(false);
       setFeedback("");
     } catch (error) {
       console.error('Error submitting feedback:', error);
       toast.error("Failed to submit feedback. Please try again.");
+      
+      // Track submission error
+      op.track('feedback_submission_error', {
+        session_id: sessionId,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -49,7 +71,7 @@ export default function WrittenFeedback({ sessionId }: WrittenFeedbackProps) {
 
   return (
     <div className="mt-8 flex justify-center">
-      <Popover open={isOpen} onOpenChange={setIsOpen}>
+      <Popover open={isOpen} onOpenChange={handleOpenChange}>
         <PopoverTrigger asChild>
           <Button 
             variant="outline"
@@ -80,7 +102,7 @@ export default function WrittenFeedback({ sessionId }: WrittenFeedbackProps) {
                 disabled={isSubmitting}
                 variant="outline"
                 className="bg-orange-500 text-white hover:bg-orange-600 hover:text-white dark:hover:bg-orange-950"
-                >
+              >
                 {isSubmitting ? "Sending..." : "Send thoughts"}
               </Button>
             </div>

@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { ChevronUp } from "lucide-react";
+import { useOpenPanel } from '@openpanel/nextjs';
 
 // Define the bubble text styles with regular and inverted variants
 const bubbleTextStyle = {
@@ -15,11 +16,22 @@ const bubbleTextStyle = {
 } as const;
 
 export default function FinalCall() {
+  const op = useOpenPanel();
   const handleGetStarted = () => {
+        // Track OAuth button click
+        op.track('oauth_button_click', {
+          location: 'final_call_section',
+          button_type: 'bottom_cta'
+        });
     window.location.href = '/api/auth/strava';
   };
 
   const handleShare = async () => {
+        // Track share attempt
+        op.track('share_button_click', {
+          location: 'final_call_section',
+          share_type: typeof navigator.share !== 'undefined' ? 'native' : 'clipboard'
+        });
     if (navigator.share) {
       try {
         await navigator.share({
@@ -27,12 +39,21 @@ export default function FinalCall() {
           text: 'Discover your unique athlete personality based on your Strava activity titles! Take the test now.',
           url: window.location.href,
         });
+                // Track successful share
+                op.track('share_completed', {
+                  location: 'final_call_section',
+                  share_type: 'native'
+                });
       } catch (error) {
         console.error('Error sharing:', error);
       }
     } else {
       // Fallback to copying URL to clipboard
       navigator.clipboard.writeText(window.location.href);
+      op.track('share_completed', {
+        location: 'final_call_section',
+        share_type: 'clipboard'
+      });
       // TODO: Add toast notification for feedback
     }
   };

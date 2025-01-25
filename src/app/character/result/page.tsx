@@ -10,6 +10,8 @@ import { useEffect, useState } from 'react';
 import confetti from 'canvas-confetti';
 import { getSupabase } from '@/lib/supabase';
 import WrittenFeedback from '@/components/ui/written-feedback';
+import { useOpenPanel } from '@openpanel/nextjs';
+import { AnalyticsEvent } from '@/lib/analytics/openpanel/analytics-event';
 
 interface UserData {
   user_name?: string;
@@ -21,6 +23,7 @@ interface UserData {
 
 export default function CharacterResultPage() {
   const router = useRouter();
+  const op = useOpenPanel();
   const [imageData, setImageData] = useState<string | null>(null);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -116,10 +119,21 @@ export default function CharacterResultPage() {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      
+
+      // Track successful download
+      op.track('character_download', {
+        personality_type: userData?.personality_type,
+        favorite_activity: userData?.favorite_activity,
+        gender: userData?.gender
+      });
+
       toast.success('Image downloaded successfully!');
     } catch (error) {
       toast.error('Failed to download image');
+      // Track download failure
+      op.track('character_download_error', {
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
     }
   };
 
@@ -139,6 +153,17 @@ export default function CharacterResultPage() {
 
   return (
     <div className="min-h-screen py-20 px-4">
+            {/* Track page view duration */}
+            <AnalyticsEvent 
+        event="character_result_page_view" 
+        properties={{
+          personality_type: userData?.personality_type,
+          favorite_activity: userData?.favorite_activity,
+          gender: userData?.gender
+        }}
+        timeOnPage={true}
+        trigger="unmount"
+      />
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <motion.div
@@ -164,7 +189,7 @@ export default function CharacterResultPage() {
           transition={{ type: "spring", duration: 0.8 }}
           className="relative aspect-square max-w-xl mx-auto mb-6 rounded-2xl overflow-hidden shadow-2xl"
         >
-          <img 
+          <img
             src={imageData || ''}
             alt="Your Athlete Character"
             className="w-full h-full object-cover"
@@ -182,7 +207,7 @@ export default function CharacterResultPage() {
           {userData?.personality_type && ` (${userData.personality_type})`}
           {userData?.favorite_activity && `, most frequent Strava activity (${userData.favorite_activity})`}
           {userData?.gender && `, and your gender (${userData.gender})`}. Because of its generative nature,
-          it may not be accurate or you simply might not like it. If that's the case, email me at 
+          it may not be accurate or you simply might not like it. If that's the case, email me at
           business@dkbuilds.co and I'll personally refund you.
         </motion.p>
 
@@ -196,8 +221,8 @@ export default function CharacterResultPage() {
           Perfect for your Strava profile picture! 🏃‍♂️
         </motion.p>
 
-        {/* Action Buttons - Simplified to single button */}
-        <motion.div 
+        {/* Action Buttons - Simplified to single Share button */}
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}

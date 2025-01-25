@@ -8,6 +8,8 @@ import RetroGrid from "@/components/ui/retro-grid";
 import AvatarCircles from "@/components/ui/avatar-circles";
 import { ChevronUp } from "lucide-react";
 import { getSupabase } from "@/lib/supabase";
+import { useOpenPanel } from '@openpanel/nextjs';
+import { AnalyticsEvent } from '@/lib/analytics/openpanel/analytics-event';
 
 // Static avatar data with diverse placeholder images
 const staticAvatars = [
@@ -95,7 +97,13 @@ export default function Hero() {
     };
   }, []);
 
+  const op = useOpenPanel();
   const handleGetStarted = () => {
+     // Track OAuth button click
+     op.track('oauth_button_click', {
+      location: 'hero_section',
+      button_type: 'main_cta'
+    });
     window.location.href = '/api/auth/strava';
   };
 
@@ -108,6 +116,12 @@ export default function Hero() {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+     {/* Track page view duration */}
+     <AnalyticsEvent 
+        event="hero_page_view" 
+        timeOnPage={true}
+        trigger="unmount"
+      />
       <RetroGrid className="absolute inset-0" opacity={0.3} />
       
       <div className="relative z-10 text-center px-4 max-w-6xl mx-auto">
