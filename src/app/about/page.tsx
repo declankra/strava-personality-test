@@ -93,7 +93,7 @@ export default function AboutPage() {
                             >
                                 portfolio
                             </Link>{" "}
-                            for other work or{" "}
+                            for other work,{" "}
                             <Link
                                 href="https://www.dkbuilds.co"
                                 target="_blank"
@@ -102,7 +102,16 @@ export default function AboutPage() {
                             >
                                 business page
                             </Link>{" "}
-                            for other products.
+                            for other products, or check out the{" "}
+                            <Link
+                                href="https://github.com/declankra/strava-personality-test"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-orange-500 hover:text-orange-600 no-underline"
+                            >
+                                GitHub repository
+                            </Link>{" "}
+                            for the source code.
                         </p>
                     </div>
                 </motion.div>
