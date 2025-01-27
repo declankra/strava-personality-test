@@ -72,7 +72,3 @@ Required environment variables:
 - `NEBIUS_API_KEY`
 
 ![Powered by Strava](public/api_logo_pwrdBy_strava_horiz_gray.svg)
-
-## License
-
-MIT © [Your Name]
