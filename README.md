@@ -30,14 +30,14 @@ Three simple observations sparked this project:
 ## How It Works
 
 1. **Connect with Strava**: Grant read access to your activity data through OAuth
-2. **Analysis**: We extract your last 100 activity titles and analyze them using GPT-4
+2. **Analysis**: We extract your last 100 activity titles and analyze them using GPT-4o
 3. **Results**: Get matched with one of six athlete personalities, complete with explanation and sample titles
-4. **Optional**: Generate a custom athlete character avatar (paid feature)
+4. **Optional**: Generate a custom athlete character avatar (paid feature using Nebius text-to-image generation)
 
 ## Key Features
 
 - 🏃‍♂️ Six distinct athlete personalities based on actual Strava user behavior
-- 🤖 AI-powered analysis of activity titles using GPT-4
+- 🤖 AI-powered analysis of activity titles using GPT-4o
 - 🎯 Custom character generation with advanced image AI
 - 📱 Fully responsive design optimized for mobile athletes
 - 📊 Serverless architecture with Supabase for real-time user insights
