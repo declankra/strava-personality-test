@@ -51,7 +51,7 @@ export default function Hero() {
         .limit(5);
       
       if (avatarData) {
-        setRecentAvatars(avatarData.map(user => ({
+        setRecentAvatars(avatarData.map((user: { user_avatar: string | null; user_strava_profile: string | null }) => ({
           imageUrl: user.user_avatar as string ?? '',
           profileUrl: user.user_strava_profile as string ?? ''
         })));

@@ -18,7 +18,7 @@ const stripe = new Stripe(
 export async function POST(request: NextRequest) {
   try {
     // 1. Get session ID from cookie
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const analysisSession = cookieStore.get('analysis_session')?.value;
 
     if (!analysisSession) {

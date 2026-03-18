@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      const cookieStore = cookies();
+      const cookieStore = await cookies();
       const sessionId = cookieStore.get('analysis_session')?.value;
       const stripeSessionId = cookieStore.get('stripe_session')?.value;
   

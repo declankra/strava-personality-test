@@ -235,7 +235,7 @@ Ensure the three titles EXACTLY match one of the valid titles from the list abov
 export async function GET(request: NextRequest) {
   try {
     // Get Strava token from cookie
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const sessionId = cookieStore.get('analysis_session')?.value;
     const stravaToken = cookieStore.get('strava_access_token')?.value;
 

@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
     const stravaAuth: StravaAuthResponse = await tokenResponse.json();
 
     // Store Strava tokens in secure HTTP-only cookies
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     cookieStore.set('strava_access_token', stravaAuth.access_token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
