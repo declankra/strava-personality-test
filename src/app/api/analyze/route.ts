@@ -285,7 +285,7 @@ export async function GET(request: NextRequest) {
         // The original JSON is inside the parse error scenario, but let's pass what we can
         // or just do a second pass with minimal info
         // If the first prompt was partially parsed, we can pass that in. If not, skip it.
-        let originalResponse: any = {};
+        const originalResponse: any = {};
         try {
           // This is optional, only if we kept the partial JSON. If not, skip.
           // For demonstration, left empty or minimal.
